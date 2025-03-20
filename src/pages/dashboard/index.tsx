@@ -1,0 +1,271 @@
+
+import { useState } from "react";
+import { Link as LinkIcon, BookmarkPlus, Inbox, Star, Folder, Search } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Logo } from "@/components/logo";
+import { LinkCard } from "@/components/dashboard/link-card";
+import { CollectionCard } from "@/components/dashboard/collection-card";
+import { EmptyState } from "@/components/dashboard/empty-state";
+import { CollectionDialog } from "@/components/dashboard/collection-dialog";
+
+// Temporary mock data
+const mockLinks = [
+  {
+    id: "1",
+    url: "https://example.com/article",
+    title: "Interesting Article About Web Development",
+    description: "A comprehensive guide to modern web development practices and techniques. Learn about the latest trends in frontend and backend development.",
+    notes: "Great resource for learning about modern web dev practices. Should review the section about React hooks.",
+    favicon: "https://example.com/favicon.ico",
+    isImportant: true,
+    dateAdded: "2024-02-15T10:30:00Z",
+  },
+  {
+    id: "2",
+    url: "https://example.com/tutorial",
+    title: "Step by Step Tutorial: Building a Full Stack App",
+    description: "Learn how to build a complete web application from scratch using React, Node.js, and MongoDB.",
+    favicon: "https://example.com/favicon.ico",
+    dateAdded: "2024-02-14T15:45:00Z",
+  },
+  // Add more mock links as needed
+];
+
+const mockCollections = [
+  {
+    id: "1",
+    name: "Web Development",
+    linkCount: 5,
+    dateCreated: "2024-02-01T09:00:00Z",
+  },
+  {
+    id: "2",
+    name: "Design Inspiration",
+    linkCount: 3,
+    dateCreated: "2024-02-10T14:20:00Z",
+  },
+  // Add more mock collections as needed
+];
+
+export default function Dashboard() {
+  const [activeTab, setActiveTab] = useState("recents");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showCollectionDialog, setShowCollectionDialog] = useState(false);
+  const [selectedLinkId, setSelectedLinkId] = useState<string | null>(null);
+
+  // Mock handlers - Replace with actual implementations
+  const handleDeleteLink = (id: string) => {
+    console.log("Delete link:", id);
+  };
+
+  const handleToggleImportant = (id: string, important: boolean) => {
+    console.log("Toggle important:", id, important);
+  };
+
+  const handleShareLink = (id: string) => {
+    console.log("Share link:", id);
+  };
+
+  const handleUpdateNotes = (id: string, notes: string) => {
+    console.log("Update notes:", id, notes);
+  };
+
+  const handleSaveToCollection = (id: string) => {
+    setSelectedLinkId(id);
+    setShowCollectionDialog(true);
+  };
+
+  const handleAddToCollection = (linkId: string, collectionId: string) => {
+    console.log("Add to collection:", { linkId, collectionId });
+  };
+
+  const handleCreateCollection = async (name: string) => {
+    console.log("Create collection:", name);
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    return "new-collection-id";
+  };
+
+  // Filter links based on search query
+  const filteredLinks = mockLinks.filter(link => 
+    link.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    link.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    link.notes?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Filter important links
+  const importantLinks = filteredLinks.filter(link => link.isImportant);
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container flex h-16 items-center">
+          <Logo className="mr-6" />
+          <div className="flex items-center space-x-4 flex-1">
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search links..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9"
+              />
+            </div>
+            <Button>
+              <LinkIcon className="h-4 w-4 mr-1" />
+              Add Link
+            </Button>
+          </div>
+        </div>
+      </header>
+
+      {/* Main content */}
+      <main className="container py-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList>
+            <TabsTrigger value="recents">
+              <Inbox className="h-4 w-4 mr-1" />
+              Recents
+            </TabsTrigger>
+            <TabsTrigger value="important">
+              <Star className="h-4 w-4 mr-1" />
+              Important
+            </TabsTrigger>
+            <TabsTrigger value="all">
+              <LinkIcon className="h-4 w-4 mr-1" />
+              All
+            </TabsTrigger>
+            <TabsTrigger value="collections">
+              <Folder className="h-4 w-4 mr-1" />
+              Collections
+            </TabsTrigger>
+          </TabsList>
+
+          <div className="mt-6">
+            <TabsContent value="recents">
+              <ScrollArea className="h-[calc(100vh-12rem)]">
+                <div className="space-y-4">
+                  {filteredLinks.length > 0 ? (
+                    filteredLinks.map(link => (
+                      <LinkCard
+                        key={link.id}
+                        {...link}
+                        onDelete={handleDeleteLink}
+                        onToggleImportant={handleToggleImportant}
+                        onShare={handleShareLink}
+                        onUpdateNotes={handleUpdateNotes}
+                        onSaveToCollection={handleSaveToCollection}
+                      />
+                    ))
+                  ) : (
+                    <EmptyState
+                      icon={<Inbox className="h-8 w-8 text-muted-foreground" />}
+                      title="No links yet"
+                      description="Add your first link to get started"
+                      action={
+                        <Button>
+                          <LinkIcon className="h-4 w-4 mr-1" />
+                          Add Link
+                        </Button>
+                      }
+                    />
+                  )}
+                </div>
+              </ScrollArea>
+            </TabsContent>
+
+            <TabsContent value="important">
+              <ScrollArea className="h-[calc(100vh-12rem)]">
+                <div className="space-y-4">
+                  {importantLinks.length > 0 ? (
+                    importantLinks.map(link => (
+                      <LinkCard
+                        key={link.id}
+                        {...link}
+                        onDelete={handleDeleteLink}
+                        onToggleImportant={handleToggleImportant}
+                        onShare={handleShareLink}
+                        onUpdateNotes={handleUpdateNotes}
+                        onSaveToCollection={handleSaveToCollection}
+                      />
+                    ))
+                  ) : (
+                    <EmptyState
+                      icon={<Star className="h-8 w-8 text-muted-foreground" />}
+                      title="No important links"
+                      description="Mark links as important to see them here"
+                    />
+                  )}
+                </div>
+              </ScrollArea>
+            </TabsContent>
+
+            <TabsContent value="all">
+              <ScrollArea className="h-[calc(100vh-12rem)]">
+                <div className="space-y-4">
+                  {filteredLinks.length > 0 ? (
+                    filteredLinks.map(link => (
+                      <LinkCard
+                        key={link.id}
+                        {...link}
+                        onDelete={handleDeleteLink}
+                        onToggleImportant={handleToggleImportant}
+                        onShare={handleShareLink}
+                        onUpdateNotes={handleUpdateNotes}
+                        onSaveToCollection={handleSaveToCollection}
+                      />
+                    ))
+                  ) : (
+                    <EmptyState
+                      icon={<LinkIcon className="h-8 w-8 text-muted-foreground" />}
+                      title="No links found"
+                      description={searchQuery ? "Try a different search term" : "Add your first link to get started"}
+                      action={
+                        <Button>
+                          <LinkIcon className="h-4 w-4 mr-1" />
+                          Add Link
+                        </Button>
+                      }
+                    />
+                  )}
+                </div>
+              </ScrollArea>
+            </TabsContent>
+
+            <TabsContent value="collections">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-lg font-medium">Your Collections</h2>
+                <Button>
+                  <BookmarkPlus className="h-4 w-4 mr-1" />
+                  New Collection
+                </Button>
+              </div>
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {mockCollections.map(collection => (
+                  <CollectionCard
+                    key={collection.id}
+                    {...collection}
+                  />
+                ))}
+              </div>
+            </TabsContent>
+          </div>
+        </Tabs>
+      </main>
+
+      <CollectionDialog
+        open={showCollectionDialog}
+        onOpenChange={setShowCollectionDialog}
+        linkId={selectedLinkId || ""}
+        collections={mockCollections}
+        onAddToCollection={handleAddToCollection}
+        onCreateCollection={handleCreateCollection}
+      />
+    </div>
+  );
+}
