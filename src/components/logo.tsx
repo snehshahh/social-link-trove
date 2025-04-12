@@ -23,8 +23,8 @@ export function Logo({ className, size = 'md' }: LogoProps) {
         className
       )}
     >
-      <span className="mr-1">Link</span>
-      <span className="bg-primary text-primary-foreground px-1.5 py-0.5 rounded-md">Trove</span>
+      <span className="mr-1">Linker's</span>
+      <span className="bg-primary text-primary-foreground px-1.5 py-0.5 rounded-md">DB</span>
     </Link>
   );
 }
