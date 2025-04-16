@@ -5,13 +5,21 @@ import { AuthForm } from "@/components/auth/auth-form";
 import { Logo } from "@/components/logo";
 import { Helmet } from "react-helmet";
 import img from "../undraw_dev-productivity_5wps_outline.svg";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { X } from "lucide-react";
 
 export default function Index() {
   const [showAuthForm, setShowAuthForm] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
+
+  const handleAuthFormOpen = () => {
+    setShowAuthForm(true);
+    setShowWarning(true);
+    setTimeout(() => setShowWarning(false), 10000);
+  };
 
   return (
-    <div className="flex flex-col min-h-screen bg-black text-white">
-      {/* SEO Optimization */}
+    <div className="flex flex-col min-h-screen bg-black text-white font-poppins">
       <Helmet>
         <title>Linker's DB - Organize Your Digital World With Precision</title>
         <meta name="description" content="The most powerful link management platform for professionals, researchers, and content creators. Save, organize, and access your digital resources with unmatched efficiency." />
@@ -21,13 +29,29 @@ export default function Index() {
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
         <link rel="canonical" href="https://linkersdb.com" />
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
       </Helmet>
 
-      <section className="flex min-h-screen items-center justify-center px-4 relative overflow-hidden bg-black">
-        {/* Background */}
-        <div className="absolute inset-0 bg-black z-0"></div>
+      {showWarning && (
+        <div className="fixed top-4 left-4 right-4 z-50 animate-in fade-in slide-in-from-top">
+          <Alert className="bg-black border border-white/20">
+            <AlertDescription className="text-white/80 text-sm">
+              Linkers DB does not hold any responsibility for the content, accuracy, or appropriateness of the links stored within the platform. Users are solely responsible for the links they upload and share. Some links may lead to content that is spam, inappropriate, or unsafe. By using Linkers DB, you acknowledge and agree that we are not liable for any issues, damages, or consequences arising from the use of these links. We strongly advise users to exercise caution and discretion when interacting with any links shared through the platform.
+            </AlertDescription>
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="absolute right-2 top-2 text-white/60 hover:text-white"
+              onClick={() => setShowWarning(false)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </Alert>
+        </div>
+      )}
 
-        {/* SVG Background - Adjusted opacity and scale */}
+      <section className="flex min-h-screen items-center justify-center px-4 relative overflow-hidden bg-black">
+        <div className="absolute inset-0 bg-black z-0"></div>
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
           <img
             src={img}
@@ -35,12 +59,8 @@ export default function Index() {
             className="h-full w-full object-cover opacity-[0.03] transform scale-125 md:scale-110"
           />
         </div>
-
-        {/* Main Content Container */}
         <div className="container mx-auto z-10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-            
-            {/* Left: Vertical Logo */}
             <div className="hidden md:flex flex-1 justify-center">
               <div className="flex flex-col items-center">
                 <span className="-rotate-90 text-5xl md:text-7xl font-bold tracking-tighter text-white hover:text-white transition-colors">
@@ -48,11 +68,7 @@ export default function Index() {
                 </span>
               </div>
             </div>
-
-            {/* Center: Vertical Line - Adjusted position closer to logo */}
-            <div className="hidden md:block w-px h-64 bg-white/10 -ml-16"></div>
-
-            {/* Right: Hero Text and Buttons */}
+            <div className="hidden md:block w-px h-64 bg-white/10 -ml-4"></div>
             <div className="flex-1 px-4 md:px-0 max-w-3xl mx-auto text-center md:text-left">
               <h1 className="text-3xl md:text-6xl font-bold tracking-tighter leading-tight text-center text-white mb-4 hover:text-white transition-colors">
                 Welcome to Linker's DB
@@ -66,7 +82,7 @@ export default function Index() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 mt-8 justify-center">
                 <Button
-                  onClick={() => setShowAuthForm(true)}
+                  onClick={handleAuthFormOpen}
                   className="bg-black text-white border-2 border-white px-8 py-6 text-base font-medium shadow-lg hover:bg-white hover:text-black transition-colors"
                 >
                   Start For Free
@@ -77,14 +93,12 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Features Section */}
       <section className="py-16 md:py-32 bg-black relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-black to-zinc-950"></div>
         <div className="container relative z-10">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 text-white">Why Choose Linker's DB?</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 px-4">
-            {/* Cards with white borders and stronger shadows on hover */}
             <div className="group bg-black/50 p-6 md:p-8 rounded-lg border border-white/10 hover:border-white/20 transition-all hover:shadow-[0_0_50px_rgba(255,255,255,0.3)]">
               <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-white">
@@ -128,7 +142,6 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Auth Dialog */}
       <Dialog open={showAuthForm} onOpenChange={setShowAuthForm}>
         <DialogContent className="sm:max-w-md bg-black border border-white/20">
           <AuthForm />
