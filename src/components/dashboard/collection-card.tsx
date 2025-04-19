@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Folder, Share2, Pencil, Trash, Check, X } from "lucide-react";
 import { toast } from "sonner";
@@ -84,15 +83,15 @@ export function CollectionCard({
     <Card 
       className={cn(
         "overflow-hidden transition-all duration-300 hover:shadow-md cursor-pointer",
-        "animate-fade-in"
+        "animate-fade-in bg-black border border-white/10 hover:border-white/20"
       )}
       onClick={handleCardClick}
     >
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Folder className="h-5 w-5 text-primary" />
-            <Badge variant="outline" className="text-xs font-normal">
+            <Folder className="h-5 w-5 text-yellow-400" />
+            <Badge variant="outline" className="text-xs font-normal text-white/70 border-white/10">
               {linkCount} {linkCount === 1 ? "link" : "links"}
             </Badge>
           </div>
@@ -103,34 +102,34 @@ export function CollectionCard({
               value={editedName}
               onChange={(e) => setEditedName(e.target.value)}
               placeholder="Collection name"
-              className="transition-all"
+              className="transition-all bg-zinc-950 border-white/10 text-white focus:border-white/20"
               autoFocus
             />
           </div>
         ) : (
-          <CardTitle className="text-xl font-medium pt-2">
+          <CardTitle className="text-xl font-medium pt-2 text-white">
             {name}
           </CardTitle>
         )}
-        <CardDescription className="text-sm mt-1">
+        <CardDescription className="text-sm mt-1 text-white/60">
           Created on {formattedDate}
         </CardDescription>
       </CardHeader>
       <CardContent>
         {/* Empty content to maintain consistent card height */}
       </CardContent>
-      <CardFooter className="flex justify-between border-t pt-4">
+      <CardFooter className="flex justify-between border-t border-white/10 pt-4">
         <div className="flex gap-2">
           {isEditing ? (
             <>
-              <Button size="sm" variant="outline" onClick={() => {
+              <Button size="sm" variant="outline" className="border-white/10 text-white/90 hover:bg-white/5 hover:text-white" onClick={() => {
                 setIsEditing(false);
                 setEditedName(name);
               }}>
                 <X className="h-4 w-4 mr-1" />
                 Cancel
               </Button>
-              <Button size="sm" onClick={handleEditName} disabled={isSaving}>
+              <Button size="sm" className="bg-black border border-white/20 text-white hover:bg-white/10" onClick={handleEditName} disabled={isSaving}>
                 {isSaving ? (
                   <>Saving...</>
                 ) : (
@@ -143,21 +142,21 @@ export function CollectionCard({
             </>
           ) : (
             <>
-              <Button size="sm" variant="outline" onClick={(e) => {
+              <Button size="sm" variant="outline" className="border-white/10 text-white/90 hover:bg-white/5 hover:text-white" onClick={(e) => {
                 e.stopPropagation();
                 setIsEditing(true);
               }}>
                 <Pencil className="h-4 w-4 mr-1" />
                 Rename
               </Button>
-              <Button size="sm" variant="outline" onClick={(e) => {
+              <Button size="sm" variant="outline" className="border-white/10 text-white/90 hover:bg-white/5 hover:text-white" onClick={(e) => {
                 e.stopPropagation();
                 handleShare();
               }}>
                 <Share2 className="h-4 w-4 mr-1" />
                 Share
               </Button>
-              <Button size="sm" variant="outline" onClick={(e) => {
+              <Button size="sm" variant="outline" className="border-white/10 text-white/90 hover:bg-white/5 hover:text-white" onClick={(e) => {
                 e.stopPropagation();
                 handleDelete();
               }}>

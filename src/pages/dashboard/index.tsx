@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link as LinkIcon, BookmarkPlus, Inbox, Star, Folder, Search } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -101,22 +100,22 @@ export default function Dashboard() {
   const importantLinks = filteredLinks.filter(link => link.isImportant);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-black text-white">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60">
         <div className="container flex h-16 items-center">
-          <Logo className="mr-6" />
+          <p className="text-2xl font-bold mx-3">linker'sdb</p>
           <div className="flex items-center space-x-4 flex-1">
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/50" />
               <Input
                 placeholder="Search links..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9"
+                className="w-full pl-9 bg-zinc-950 border-white/10 text-white/90 focus:border-white/20"
               />
             </div>
-            <Button>
+            <Button className="bg-black border border-white/20 text-white hover:bg-white/10">
               <LinkIcon className="h-4 w-4 mr-1" />
               Add Link
             </Button>
@@ -126,21 +125,33 @@ export default function Dashboard() {
 
       {/* Main content */}
       <main className="container py-6">
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList>
-            <TabsTrigger value="recents">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="text-white">
+          <TabsList className="bg-zinc-950 border border-white/10">
+            <TabsTrigger 
+              value="recents" 
+              className="data-[state=active]:bg-black data-[state=active]:text-white data-[state=active]:shadow-sm text-white/70"
+            >
               <Inbox className="h-4 w-4 mr-1" />
               Recents
             </TabsTrigger>
-            <TabsTrigger value="important">
+            <TabsTrigger 
+              value="important" 
+              className="data-[state=active]:bg-black data-[state=active]:text-yellow-400 data-[state=active]:shadow-sm text-white/70"
+            >
               <Star className="h-4 w-4 mr-1" />
               Important
             </TabsTrigger>
-            <TabsTrigger value="all">
+            <TabsTrigger 
+              value="all" 
+              className="data-[state=active]:bg-black data-[state=active]:text-white data-[state=active]:shadow-sm text-white/70"
+            >
               <LinkIcon className="h-4 w-4 mr-1" />
               All
             </TabsTrigger>
-            <TabsTrigger value="collections">
+            <TabsTrigger 
+              value="collections" 
+              className="data-[state=active]:bg-black data-[state=active]:text-white data-[state=active]:shadow-sm text-white/70"
+            >
               <Folder className="h-4 w-4 mr-1" />
               Collections
             </TabsTrigger>
@@ -164,15 +175,16 @@ export default function Dashboard() {
                     ))
                   ) : (
                     <EmptyState
-                      icon={<Inbox className="h-8 w-8 text-muted-foreground" />}
+                      icon={<Inbox className="h-8 w-8 text-white/50" />}
                       title="No links yet"
                       description="Add your first link to get started"
                       action={
-                        <Button>
+                        <Button className="bg-black border border-white/20 text-white hover:bg-white/10">
                           <LinkIcon className="h-4 w-4 mr-1" />
                           Add Link
                         </Button>
                       }
+                      className="bg-zinc-950 border-white/10"
                     />
                   )}
                 </div>
@@ -196,9 +208,10 @@ export default function Dashboard() {
                     ))
                   ) : (
                     <EmptyState
-                      icon={<Star className="h-8 w-8 text-muted-foreground" />}
+                      icon={<Star className="h-8 w-8 text-white/50" />}
                       title="No important links"
                       description="Mark links as important to see them here"
+                      className="bg-zinc-950 border-white/10"
                     />
                   )}
                 </div>
@@ -222,15 +235,16 @@ export default function Dashboard() {
                     ))
                   ) : (
                     <EmptyState
-                      icon={<LinkIcon className="h-8 w-8 text-muted-foreground" />}
+                      icon={<LinkIcon className="h-8 w-8 text-white/50" />}
                       title="No links found"
                       description={searchQuery ? "Try a different search term" : "Add your first link to get started"}
                       action={
-                        <Button>
+                        <Button className="bg-black border border-white/20 text-white hover:bg-white/10">
                           <LinkIcon className="h-4 w-4 mr-1" />
                           Add Link
                         </Button>
                       }
+                      className="bg-zinc-950 border-white/10"
                     />
                   )}
                 </div>
@@ -239,8 +253,8 @@ export default function Dashboard() {
 
             <TabsContent value="collections">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-lg font-medium">Your Collections</h2>
-                <Button>
+                <h2 className="text-lg font-medium text-white">Your Collections</h2>
+                <Button className="bg-black border border-white/20 text-white hover:bg-white/10">
                   <BookmarkPlus className="h-4 w-4 mr-1" />
                   New Collection
                 </Button>

@@ -23,14 +23,11 @@ const App = () => (
           <Route 
             path="/dashboard" 
             element={
-              <SidebarProvider>
-                <div className="flex min-h-screen w-full">
-                  <MainSidebar />
+              
                   <div className="flex-1">
                     <Dashboard />
                   </div>
-                </div>
-              </SidebarProvider>
+
             } 
           />
           <Route path="*" element={<NotFound />} />

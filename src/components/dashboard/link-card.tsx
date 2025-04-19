@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { 
   Trash2, Star, Share, Edit, Save, BookmarkPlus, Bookmark, CheckCircle, X 
@@ -107,7 +106,7 @@ export function LinkCard({
 
   return (
     <Card className={cn(
-      "overflow-hidden transition-all duration-300 group hover:shadow-md", 
+      "overflow-hidden transition-all duration-300 group hover:shadow-md bg-black border border-white/10 hover:border-white/20", 
       isImportant && "border-l-4 border-l-yellow-400",
       "animate-fade-in"
     )}>
@@ -125,26 +124,26 @@ export function LinkCard({
               }}
             />
           )}
-          <Badge variant="outline" className="text-xs font-normal">
+          <Badge variant="outline" className="text-xs font-normal text-white/70 border-white/10">
             {domain}
           </Badge>
           {isImportant && (
-            <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200">
-              <Star className="h-3 w-3 mr-1 fill-yellow-500 stroke-yellow-500" /> Important
+            <Badge variant="secondary" className="bg-black border border-yellow-400/50 text-yellow-400">
+              <Star className="h-3 w-3 mr-1 fill-yellow-400 stroke-yellow-400" /> Important
             </Badge>
           )}
         </div>
-        <CardTitle className="text-xl font-medium pt-2 text-balance">
+        <CardTitle className="text-xl font-medium pt-2 text-balance text-white">
           <a 
             href={url} 
             target="_blank" 
             rel="noopener noreferrer"
-            className="hover:text-primary/90 transition-colors"
+            className="hover:text-white transition-colors"
           >
             {title}
           </a>
         </CardTitle>
-        <CardDescription className="text-base mt-2">
+        <CardDescription className="text-base mt-2 text-white/70">
           {showFullDescription || !description || description.length <= 150 
             ? description 
             : (
@@ -152,7 +151,7 @@ export function LinkCard({
                 {truncateDescription(description)}
                 <button 
                   onClick={() => setShowFullDescription(true)} 
-                  className="text-primary font-medium ml-1 hover:underline"
+                  className="text-yellow-400 font-medium ml-1 hover:underline"
                 >
                   Show more
                 </button>
@@ -167,22 +166,22 @@ export function LinkCard({
               value={editedNotes}
               onChange={(e) => setEditedNotes(e.target.value)}
               placeholder="Add your notes here..."
-              className="min-h-[100px] transition-all"
+              className="min-h-[100px] transition-all bg-zinc-950 border-white/10 text-white focus:border-white/20"
             />
           </div>
         ) : (
           notes && (
-            <div className="bg-secondary/50 p-3 rounded-lg text-sm">
-              <p className="text-muted-foreground font-medium text-xs uppercase mb-1">Notes</p>
-              <p className="text-balance">{notes}</p>
+            <div className="bg-zinc-950 p-3 rounded-lg text-sm">
+              <p className="text-white/50 font-medium text-xs uppercase mb-1">Notes</p>
+              <p className="text-balance text-white/90">{notes}</p>
             </div>
           )
         )}
       </CardContent>
       <CardFooter className={cn(
-        "flex flex-wrap items-center justify-between border-t pt-4 gap-2",
+        "flex flex-wrap items-center justify-between border-t border-white/10 pt-4 gap-2",
       )}>
-        <div className="text-xs text-muted-foreground">
+        <div className="text-xs text-white/50">
           Added on {formattedDate}
         </div>
         <div className="flex flex-wrap gap-2">
@@ -190,11 +189,11 @@ export function LinkCard({
             <>
               {isEditing ? (
                 <>
-                  <Button size="sm" variant="outline" onClick={() => setIsEditing(false)}>
+                  <Button size="sm" variant="outline" className="border-white/10 text-white/90 hover:bg-white/5 hover:text-white" onClick={() => setIsEditing(false)}>
                     <X className="h-4 w-4 mr-1" />
                     Cancel
                   </Button>
-                  <Button size="sm" onClick={handleSaveNotes} disabled={isSaving}>
+                  <Button size="sm" className="bg-black border border-white/20 text-white hover:bg-white/10" onClick={handleSaveNotes} disabled={isSaving}>
                     {isSaving ? (
                       <>Saving...</>
                     ) : (
@@ -207,30 +206,35 @@ export function LinkCard({
                 </>
               ) : (
                 <>
-                  <Button size="sm" variant="outline" onClick={handleDelete}>
+                  <Button size="sm" variant="outline" className="border-white/10 text-white/90 hover:bg-white/5 hover:text-white" onClick={handleDelete}>
                     <Trash2 className="h-4 w-4 mr-1" />
                     Delete
                   </Button>
                   <Button 
                     size="sm" 
-                    variant={isImportant ? "default" : "outline"} 
+                    className={cn(
+                      "border text-white/90",
+                      isImportant 
+                        ? "bg-black border-yellow-400/70 text-yellow-400 hover:bg-yellow-400/10" 
+                        : "border-white/10 hover:bg-white/5 hover:text-white"
+                    )}
                     onClick={handleToggleImportant}
                   >
                     <Star className={cn(
                       "h-4 w-4 mr-1",
-                      isImportant && "fill-current"
+                      isImportant && "fill-yellow-400 stroke-yellow-400"
                     )} />
                     {isImportant ? "Important" : "Mark Important"}
                   </Button>
-                  <Button size="sm" variant="outline" onClick={handleShare}>
+                  <Button size="sm" variant="outline" className="border-white/10 text-white/90 hover:bg-white/5 hover:text-white" onClick={handleShare}>
                     <Share className="h-4 w-4 mr-1" />
                     Share
                   </Button>
-                  <Button size="sm" variant="outline" onClick={() => setIsEditing(true)}>
+                  <Button size="sm" variant="outline" className="border-white/10 text-white/90 hover:bg-white/5 hover:text-white" onClick={() => setIsEditing(true)}>
                     <Edit className="h-4 w-4 mr-1" />
                     Edit Notes
                   </Button>
-                  <Button size="sm" variant="outline" onClick={handleSaveToCollection}>
+                  <Button size="sm" variant="outline" className="border-white/10 text-white/90 hover:bg-white/5 hover:text-white" onClick={handleSaveToCollection}>
                     <BookmarkPlus className="h-4 w-4 mr-1" />
                     Save to Collection
                   </Button>
@@ -240,11 +244,11 @@ export function LinkCard({
           ) : (
             // Collection variant has fewer actions
             <>
-              <Button size="sm" variant="outline" onClick={handleShare}>
+              <Button size="sm" variant="outline" className="border-white/10 text-white/90 hover:bg-white/5 hover:text-white" onClick={handleShare}>
                 <Share className="h-4 w-4 mr-1" />
                 Share
               </Button>
-              <Button size="sm" variant="outline" onClick={handleRemoveFromCollection}>
+              <Button size="sm" variant="outline" className="border-white/10 text-white/90 hover:bg-white/5 hover:text-white" onClick={handleRemoveFromCollection}>
                 <Bookmark className="h-4 w-4 mr-1" />
                 Remove
               </Button>
