@@ -1,5 +1,6 @@
+
 import { useState } from "react";
-import { Folder, Share2, Pencil, Trash, Check, X } from "lucide-react";
+import { Folder, Share2, Pencil, Trash, Check, X, Link as LinkIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -82,20 +83,17 @@ export function CollectionCard({
   return (
     <Card 
       className={cn(
-        "overflow-hidden transition-all duration-300 hover:shadow-md cursor-pointer",
-        "animate-fade-in bg-black border border-white/10 hover:border-white/20"
+        "overflow-hidden transition-all duration-300 hover:shadow-md cursor-pointer group",
+        "animate-fade-in bg-gradient-to-br from-black to-zinc-900 border border-white/10 hover:border-white/20"
       )}
       onClick={handleCardClick}
     >
-      <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Folder className="h-5 w-5 text-yellow-400" />
-            <Badge variant="outline" className="text-xs font-normal text-white/70 border-white/10">
-              {linkCount} {linkCount === 1 ? "link" : "links"}
-            </Badge>
-          </div>
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-400/10 via-yellow-400/50 to-yellow-400/10"></div>
+      <CardHeader className="pb-2 relative">
+        <div className="absolute top-2 right-2 flex items-center justify-center size-8 rounded-full bg-zinc-950/50 backdrop-blur border border-white/5">
+          <Folder className="h-4 w-4 text-yellow-400" />
         </div>
+        
         {isEditing ? (
           <div className="pt-2 flex items-center gap-2">
             <Input
@@ -107,18 +105,35 @@ export function CollectionCard({
             />
           </div>
         ) : (
-          <CardTitle className="text-xl font-medium pt-2 text-white">
-            {name}
-          </CardTitle>
+          <>
+            <CardTitle className="text-xl font-medium pt-2 text-white pr-8">
+              {name}
+            </CardTitle>
+            <div className="flex items-center gap-2 mt-2">
+              <Badge variant="outline" className="text-xs font-normal text-white/70 border-white/10 bg-zinc-950/50">
+                <LinkIcon className="h-3 w-3 mr-1 text-yellow-400" />
+                {linkCount} {linkCount === 1 ? "link" : "links"}
+              </Badge>
+            </div>
+          </>
         )}
         <CardDescription className="text-sm mt-1 text-white/60">
           Created on {formattedDate}
         </CardDescription>
       </CardHeader>
+      
       <CardContent>
-        {/* Empty content to maintain consistent card height */}
+        <div className="h-10 flex items-center">
+          <div className="w-full h-1.5 bg-zinc-950 rounded overflow-hidden">
+            <div 
+              className="h-full bg-gradient-to-r from-yellow-400/50 to-yellow-400"
+              style={{ width: `${Math.min(100, linkCount * 10)}%` }}
+            ></div>
+          </div>
+        </div>
       </CardContent>
-      <CardFooter className="flex justify-between border-t border-white/10 pt-4">
+      
+      <CardFooter className="flex justify-between border-t border-white/10 pt-4 bg-zinc-950/30">
         <div className="flex gap-2">
           {isEditing ? (
             <>
@@ -129,7 +144,7 @@ export function CollectionCard({
                 <X className="h-4 w-4 mr-1" />
                 Cancel
               </Button>
-              <Button size="sm" className="bg-black border border-white/20 text-white hover:bg-white/10" onClick={handleEditName} disabled={isSaving}>
+              <Button size="sm" className="bg-white border border-white/20 text-black hover:bg-black hover:text-white" onClick={handleEditName} disabled={isSaving}>
                 {isSaving ? (
                   <>Saving...</>
                 ) : (

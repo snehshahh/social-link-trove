@@ -1,12 +1,15 @@
+
 import { useState } from "react";
 import { 
-  Trash2, Star, Share, Edit, Save, BookmarkPlus, Bookmark, CheckCircle, X 
+  Trash2, Star, Share, Edit, Save, BookmarkPlus, Bookmark, 
+  CheckCircle, X, ChevronDown, ChevronUp, Globe, Lock
 } from "lucide-react";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 
 export interface LinkCardProps {
@@ -17,10 +20,12 @@ export interface LinkCardProps {
   notes?: string;
   favicon?: string;
   isImportant?: boolean;
+  isPublic?: boolean;
   dateAdded: string;
   variant?: "default" | "collection";
   onDelete?: (id: string) => void;
   onToggleImportant?: (id: string, important: boolean) => void;
+  onTogglePublic?: (id: string, isPublic: boolean) => void;
   onShare?: (id: string) => void;
   onSaveToCollection?: (id: string) => void;
   onUpdateNotes?: (id: string, notes: string) => void;
@@ -35,10 +40,12 @@ export function LinkCard({
   notes,
   favicon,
   isImportant = false,
+  isPublic = false,
   dateAdded,
   variant = "default",
   onDelete,
   onToggleImportant,
+  onTogglePublic,
   onShare,
   onSaveToCollection,
   onUpdateNotes,
@@ -48,6 +55,7 @@ export function LinkCard({
   const [editedNotes, setEditedNotes] = useState(notes || "");
   const [isSaving, setIsSaving] = useState(false);
   const [showFullDescription, setShowFullDescription] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   // Format the date
   const formattedDate = new Date(dateAdded).toLocaleDateString("en-US", {
@@ -79,9 +87,18 @@ export function LinkCard({
     toast.success(isImportant ? "Removed from important" : "Marked as important");
   };
 
+  const handleTogglePublic = () => {
+    onTogglePublic?.(id, !isPublic);
+    toast.success(isPublic ? "Link set to private" : "Link set to public");
+  };
+
   const handleShare = () => {
+    if (!isPublic) {
+      toast.error("Only public links can be shared");
+      return;
+    }
     onShare?.(id);
-    toast.success("Link copied to clipboard");
+    toast.success("Link shared successfully");
   };
 
   const handleSaveToCollection = () => {
@@ -111,27 +128,58 @@ export function LinkCard({
       "animate-fade-in"
     )}>
       <CardHeader className="relative pb-3">
-        <div className="flex items-center gap-2">
-          {favicon && (
-            <img 
-              src={favicon} 
-              alt={`${domain} favicon`} 
-              width={16} 
-              height={16} 
-              className="rounded-sm"
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = 'none';
-              }}
-            />
-          )}
-          <Badge variant="outline" className="text-xs font-normal text-white/70 border-white/10">
-            {domain}
-          </Badge>
-          {isImportant && (
-            <Badge variant="secondary" className="bg-black border border-yellow-400/50 text-yellow-400">
-              <Star className="h-3 w-3 mr-1 fill-yellow-400 stroke-yellow-400" /> Important
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            {favicon && (
+              <img 
+                src={favicon} 
+                alt={`${domain} favicon`} 
+                width={16} 
+                height={16} 
+                className="rounded-sm"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
+            )}
+            <Badge variant="outline" className="text-xs font-normal text-white/70 border-white/10">
+              {domain}
             </Badge>
-          )}
+            {isImportant && (
+              <Badge variant="secondary" className="bg-black border border-yellow-400/50 text-yellow-400">
+                <Star className="h-3 w-3 mr-1 fill-yellow-400 stroke-yellow-400" /> Important
+              </Badge>
+            )}
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs text-white/60">
+                {isPublic ? (
+                  <Globe className="h-3.5 w-3.5 text-white/60" />
+                ) : (
+                  <Lock className="h-3.5 w-3.5 text-white/60" />
+                )}
+              </span>
+              <Switch 
+                checked={isPublic}
+                onCheckedChange={handleTogglePublic}
+                className="data-[state=checked]:bg-yellow-400 data-[state=unchecked]:bg-zinc-800"
+              />
+              <span className="text-xs text-white/60">{isPublic ? "Public" : "Private"}</span>
+            </div>
+            <Button 
+              size="sm" 
+              variant="ghost"
+              className="h-8 w-8 p-0" 
+              onClick={() => setIsPreviewOpen(!isPreviewOpen)}
+            >
+              {isPreviewOpen ? (
+                <ChevronUp className="h-4 w-4 text-white/70" />
+              ) : (
+                <ChevronDown className="h-4 w-4 text-white/70" />
+              )}
+            </Button>
+          </div>
         </div>
         <CardTitle className="text-xl font-medium pt-2 text-balance text-white">
           <a 
@@ -159,6 +207,20 @@ export function LinkCard({
             )}
         </CardDescription>
       </CardHeader>
+      
+      {isPreviewOpen && (
+        <div className="px-6 pb-4 -mt-2">
+          <div className="w-full overflow-hidden rounded-lg border border-white/10">
+            <iframe 
+              src={url} 
+              title={title}
+              className="w-full h-[300px]"
+              sandbox="allow-scripts allow-same-origin"
+            />
+          </div>
+        </div>
+      )}
+      
       <CardContent>
         {isEditing ? (
           <div className="space-y-2">
@@ -193,7 +255,7 @@ export function LinkCard({
                     <X className="h-4 w-4 mr-1" />
                     Cancel
                   </Button>
-                  <Button size="sm" className="bg-black border border-white/20 text-white hover:bg-white/10" onClick={handleSaveNotes} disabled={isSaving}>
+                  <Button size="sm" className="bg-white border border-white/20 text-black hover:bg-black hover:text-white" onClick={handleSaveNotes} disabled={isSaving}>
                     {isSaving ? (
                       <>Saving...</>
                     ) : (
@@ -226,7 +288,16 @@ export function LinkCard({
                     )} />
                     {isImportant ? "Important" : "Mark Important"}
                   </Button>
-                  <Button size="sm" variant="outline" className="border-white/10 text-white/90 hover:bg-white/5 hover:text-white" onClick={handleShare}>
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className={cn(
+                      "border-white/10 text-white/90 hover:bg-white/5 hover:text-white",
+                      !isPublic && "opacity-50 cursor-not-allowed"
+                    )} 
+                    onClick={handleShare}
+                    disabled={!isPublic}
+                  >
                     <Share className="h-4 w-4 mr-1" />
                     Share
                   </Button>
@@ -234,7 +305,7 @@ export function LinkCard({
                     <Edit className="h-4 w-4 mr-1" />
                     Edit Notes
                   </Button>
-                  <Button size="sm" variant="outline" className="border-white/10 text-white/90 hover:bg-white/5 hover:text-white" onClick={handleSaveToCollection}>
+                  <Button size="sm" className="bg-white border border-white/20 text-black hover:bg-black hover:text-white" onClick={handleSaveToCollection}>
                     <BookmarkPlus className="h-4 w-4 mr-1" />
                     Save to Collection
                   </Button>
@@ -244,7 +315,16 @@ export function LinkCard({
           ) : (
             // Collection variant has fewer actions
             <>
-              <Button size="sm" variant="outline" className="border-white/10 text-white/90 hover:bg-white/5 hover:text-white" onClick={handleShare}>
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className={cn(
+                  "border-white/10 text-white/90 hover:bg-white/5 hover:text-white",
+                  !isPublic && "opacity-50 cursor-not-allowed"
+                )} 
+                onClick={handleShare}
+                disabled={!isPublic}
+              >
                 <Share className="h-4 w-4 mr-1" />
                 Share
               </Button>

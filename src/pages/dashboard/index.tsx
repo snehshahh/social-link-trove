@@ -1,11 +1,10 @@
+
 import { useState } from "react";
 import { Link as LinkIcon, BookmarkPlus, Inbox, Star, Folder, Search } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Logo } from "@/components/logo";
 import { LinkCard } from "@/components/dashboard/link-card";
 import { CollectionCard } from "@/components/dashboard/collection-card";
 import { EmptyState } from "@/components/dashboard/empty-state";
@@ -21,6 +20,7 @@ const mockLinks = [
     notes: "Great resource for learning about modern web dev practices. Should review the section about React hooks.",
     favicon: "https://example.com/favicon.ico",
     isImportant: true,
+    isPublic: true,
     dateAdded: "2024-02-15T10:30:00Z",
   },
   {
@@ -29,6 +29,7 @@ const mockLinks = [
     title: "Step by Step Tutorial: Building a Full Stack App",
     description: "Learn how to build a complete web application from scratch using React, Node.js, and MongoDB.",
     favicon: "https://example.com/favicon.ico",
+    isPublic: false,
     dateAdded: "2024-02-14T15:45:00Z",
   },
   // Add more mock links as needed
@@ -55,21 +56,39 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showCollectionDialog, setShowCollectionDialog] = useState(false);
   const [selectedLinkId, setSelectedLinkId] = useState<string | null>(null);
+  const [links, setLinks] = useState(mockLinks);
 
   // Mock handlers - Replace with actual implementations
   const handleDeleteLink = (id: string) => {
+    setLinks(links.filter(link => link.id !== id));
     console.log("Delete link:", id);
   };
 
   const handleToggleImportant = (id: string, important: boolean) => {
+    setLinks(links.map(link => 
+      link.id === id ? { ...link, isImportant: important } : link
+    ));
     console.log("Toggle important:", id, important);
   };
 
+  const handleTogglePublic = (id: string, isPublic: boolean) => {
+    setLinks(links.map(link => 
+      link.id === id ? { ...link, isPublic } : link
+    ));
+    console.log("Toggle public:", id, isPublic);
+  };
+
   const handleShareLink = (id: string) => {
-    console.log("Share link:", id);
+    const link = links.find(link => link.id === id);
+    if (link && link.isPublic) {
+      console.log("Share link:", id);
+    }
   };
 
   const handleUpdateNotes = (id: string, notes: string) => {
+    setLinks(links.map(link => 
+      link.id === id ? { ...link, notes } : link
+    ));
     console.log("Update notes:", id, notes);
   };
 
@@ -90,7 +109,7 @@ export default function Dashboard() {
   };
 
   // Filter links based on search query
-  const filteredLinks = mockLinks.filter(link => 
+  const filteredLinks = links.filter(link => 
     link.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     link.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     link.notes?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -102,9 +121,9 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60">
+      <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60">
         <div className="container flex h-16 items-center">
-          <p className="text-2xl font-bold mx-3">linker'sdb</p>
+          <p className="text-2xl font-bold mx-3 font-poppins">linker'sdb</p>
           <div className="flex items-center space-x-4 flex-1">
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/50" />
@@ -115,7 +134,7 @@ export default function Dashboard() {
                 className="w-full pl-9 bg-zinc-950 border-white/10 text-white/90 focus:border-white/20"
               />
             </div>
-            <Button className="bg-black border border-white/20 text-white hover:bg-white/10">
+            <Button className="bg-white border border-white/20 text-black hover:bg-black hover:text-white">
               <LinkIcon className="h-4 w-4 mr-1" />
               Add Link
             </Button>
@@ -124,7 +143,7 @@ export default function Dashboard() {
       </header>
 
       {/* Main content */}
-      <main className="container py-6">
+      <main className="container py-6 pb-20">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="text-white">
           <TabsList className="bg-zinc-950 border border-white/10">
             <TabsTrigger 
@@ -168,6 +187,7 @@ export default function Dashboard() {
                         {...link}
                         onDelete={handleDeleteLink}
                         onToggleImportant={handleToggleImportant}
+                        onTogglePublic={handleTogglePublic}
                         onShare={handleShareLink}
                         onUpdateNotes={handleUpdateNotes}
                         onSaveToCollection={handleSaveToCollection}
@@ -179,7 +199,7 @@ export default function Dashboard() {
                       title="No links yet"
                       description="Add your first link to get started"
                       action={
-                        <Button className="bg-black border border-white/20 text-white hover:bg-white/10">
+                        <Button className="bg-white border border-white/20 text-black hover:bg-black hover:text-white">
                           <LinkIcon className="h-4 w-4 mr-1" />
                           Add Link
                         </Button>
@@ -201,6 +221,7 @@ export default function Dashboard() {
                         {...link}
                         onDelete={handleDeleteLink}
                         onToggleImportant={handleToggleImportant}
+                        onTogglePublic={handleTogglePublic}
                         onShare={handleShareLink}
                         onUpdateNotes={handleUpdateNotes}
                         onSaveToCollection={handleSaveToCollection}
@@ -228,6 +249,7 @@ export default function Dashboard() {
                         {...link}
                         onDelete={handleDeleteLink}
                         onToggleImportant={handleToggleImportant}
+                        onTogglePublic={handleTogglePublic}
                         onShare={handleShareLink}
                         onUpdateNotes={handleUpdateNotes}
                         onSaveToCollection={handleSaveToCollection}
@@ -239,7 +261,7 @@ export default function Dashboard() {
                       title="No links found"
                       description={searchQuery ? "Try a different search term" : "Add your first link to get started"}
                       action={
-                        <Button className="bg-black border border-white/20 text-white hover:bg-white/10">
+                        <Button className="bg-white border border-white/20 text-black hover:bg-black hover:text-white">
                           <LinkIcon className="h-4 w-4 mr-1" />
                           Add Link
                         </Button>
@@ -254,7 +276,7 @@ export default function Dashboard() {
             <TabsContent value="collections">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-lg font-medium text-white">Your Collections</h2>
-                <Button className="bg-black border border-white/20 text-white hover:bg-white/10">
+                <Button className="bg-white border border-white/20 text-black hover:bg-black hover:text-white">
                   <BookmarkPlus className="h-4 w-4 mr-1" />
                   New Collection
                 </Button>
