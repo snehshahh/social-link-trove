@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -10,7 +11,9 @@ import {
   FolderKanban,
   Settings,
   LogOut,
-  Lock
+  Lock,
+  User,
+  Share
 } from 'lucide-react';
 import { Logo } from '@/components/logo';
 import {
@@ -34,7 +37,7 @@ export function MainSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="p-4 bg-black">
-        <Logo size="md" className="mx-auto" />
+        <Logo size="md" className="mx-auto text-white" />
       </SidebarHeader>
       <SidebarSeparator className="bg-white/10" />
       <SidebarContent className="bg-black">
@@ -45,17 +48,25 @@ export function MainSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Home">
                   <Link to="/dashboard">
-                    <Home />
-                    <span>Home</span>
+                    <Home className="text-white" />
+                    <span className="text-white">Home</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip="Profile">
+                  <Link to="/profile">
+                    <User className="text-white" />
+                    <span className="text-white">Profile</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Explore (Coming Soon)">
                   <div className="cursor-not-allowed opacity-70">
-                    <Search />
-                    <span>Explore</span>
-                    <Lock className="ml-auto h-4 w-4" />
+                    <Search className="text-white" />
+                    <span className="text-white">Explore</span>
+                    <Lock className="ml-auto h-4 w-4 text-white" />
                   </div>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -70,32 +81,40 @@ export function MainSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Recents">
                   <Link to="/dashboard?tab=recents">
-                    <Clock />
-                    <span>Recents</span>
+                    <Clock className="text-white" />
+                    <span className="text-white">Recents</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Important">
                   <Link to="/dashboard?tab=important">
-                    <Star />
-                    <span>Important</span>
+                    <Star className="text-white" />
+                    <span className="text-white">Important</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="All Links">
                   <Link to="/dashboard?tab=all">
-                    <ListFilter />
-                    <span>All Links</span>
+                    <ListFilter className="text-white" />
+                    <span className="text-white">All Links</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Collections">
                   <Link to="/dashboard?tab=collections">
-                    <FolderKanban />
-                    <span>Collections</span>
+                    <FolderKanban className="text-white" />
+                    <span className="text-white">Collections</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip="Sharing">
+                  <Link to="/dashboard?tab=sharing">
+                    <Share className="text-white" />
+                    <span className="text-white">Sharing</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -111,16 +130,16 @@ export function MainSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Settings">
                   <Link to="#">
-                    <Settings />
-                    <span>Settings</span>
+                    <Settings className="text-white" />
+                    <span className="text-white">Settings</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Logout">
                   <Link to="/">
-                    <LogOut />
-                    <span>Logout</span>
+                    <LogOut className="text-white" />
+                    <span className="text-white">Logout</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

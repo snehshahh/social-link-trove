@@ -8,6 +8,7 @@ import { MainSidebar } from "./components/main-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import Index from "./pages/Index";
 import Dashboard from "./pages/dashboard";
+import Profile from "./pages/profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,13 +24,17 @@ const App = () => (
           <Route 
             path="/dashboard" 
             element={
-              
-                  <div className="flex-1">
+              <SidebarProvider>
+                <div className="flex h-screen bg-black">
+                  <MainSidebar />
+                  <div className="flex-1 overflow-auto">
                     <Dashboard />
                   </div>
-
+                </div>
+              </SidebarProvider>
             } 
           />
+          <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

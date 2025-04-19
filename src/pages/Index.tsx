@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -7,6 +8,7 @@ import { Helmet } from "react-helmet";
 import img from "../undraw_dev-productivity_5wps_outline.svg";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { X, Twitter, Facebook, Instagram, Linkedin, Mail } from "lucide-react";
+import { NavigationBar } from "@/components/navigation-bar";
 
 export default function Index() {
   const [showAuthForm, setShowAuthForm] = useState(false);
@@ -33,6 +35,8 @@ export default function Index() {
         <link rel="canonical" href="https://linkersdb.com" />
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
       </Helmet>
+
+      <NavigationBar onAuthClick={handleAuthFormOpen} />
 
       {showWarning && (
         <div className="fixed top-4 left-4 right-4 z-50 animate-in fade-in slide-in-from-top">
@@ -70,7 +74,7 @@ export default function Index() {
                 </span>
               </div>
             </div>
-            <div className="hidden md:block w-px h-64 bg-white/10 -ml-4"></div>
+            <div className="hidden md:block w-px h-64 bg-white/10 -ml-8"></div>
             <div className="flex-1 px-4 md:px-0 max-w-3xl mx-auto text-center md:text-left">
               <h1 className="text-3xl md:text-6xl font-bold tracking-tighter leading-tight text-center text-white mb-4 hover:text-white transition-colors">
                 Welcome to Linker's DB
@@ -85,7 +89,7 @@ export default function Index() {
               <div className="flex flex-col sm:flex-row gap-4 mt-8 justify-center">
                 <Button
                   onClick={handleAuthFormOpen}
-                  className="bg-black text-white border-2 border-white px-8 py-6 text-base font-medium shadow-lg hover:bg-white hover:text-black transition-colors"
+                  className="bg-white text-black border-2 border-white px-8 py-6 text-base font-medium shadow-lg hover:bg-white/90 transition-colors"
                 >
                   Start For Free
                 </Button>

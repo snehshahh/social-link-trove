@@ -1,0 +1,42 @@
+
+# Linker's DB Color Palette
+
+## Primary Colors
+- Black (#000000): Main background color
+- White (#FFFFFF): Primary text and borders
+- Yellow Accent (#EAB308): Highlight color for important elements
+
+## Background Variations
+- Pure Black (#000000): Hero section
+- Zinc-950 (#09090B): Alternating sections
+- Black with opacity (#000000/50%): Card backgrounds
+
+## Text Colors
+- White (#FFFFFF): Headings and important text
+- White with 90% opacity (#FFFFFF/90%): Subheadings
+- White with 70% opacity (#FFFFFF/70%): Body text
+- White with 60% opacity (#FFFFFF/60%): Secondary text
+- White with 50% opacity (#FFFFFF/50%): Footer text
+
+## UI Elements
+- White with 10% opacity (#FFFFFF/10%): Border colors
+- White with 20% opacity (#FFFFFF/20%): Hover border colors
+- White with 10% opacity (#FFFFFF/10%): Icon backgrounds
+
+## Gradients
+- Black to Zinc-950 (#000000 to #09090B): Section background gradient
+
+## Hover States
+- White (#FFFFFF): Text hover
+- White with 90% opacity (#FFFFFF/90%): Button hover
+- Shadow glow: 0 0 50px rgba(255,255,255,0.3)
+
+## Alerts and Notifications
+- Black with borders (#000000 with #FFFFFF/20% border): Alert backgrounds
+
+## Notes for Implementation
+- Use higher opacity white for more important elements
+- Maintain high contrast for accessibility
+- Use the yellow accent sparingly for maximum impact
+- Darker backgrounds for alternating sections create visual separation
+- Subtle hover effects enhance interactivity without breaking the dark theme
