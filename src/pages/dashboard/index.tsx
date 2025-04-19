@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link as LinkIcon, BookmarkPlus, Inbox, Star, Folder, Search } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,8 +8,8 @@ import { LinkCard } from "@/components/dashboard/link-card";
 import { CollectionCard } from "@/components/dashboard/collection-card";
 import { EmptyState } from "@/components/dashboard/empty-state";
 import { CollectionDialog } from "@/components/dashboard/collection-dialog";
+import { ThemeToggle } from "@/components/theme-toggle";
 
-// Temporary mock data
 const mockLinks = [
   {
     id: "1",
@@ -32,7 +31,6 @@ const mockLinks = [
     isPublic: false,
     dateAdded: "2024-02-14T15:45:00Z",
   },
-  // Add more mock links as needed
 ];
 
 const mockCollections = [
@@ -48,7 +46,6 @@ const mockCollections = [
     linkCount: 3,
     dateCreated: "2024-02-10T14:20:00Z",
   },
-  // Add more mock collections as needed
 ];
 
 export default function Dashboard() {
@@ -57,8 +54,13 @@ export default function Dashboard() {
   const [showCollectionDialog, setShowCollectionDialog] = useState(false);
   const [selectedLinkId, setSelectedLinkId] = useState<string | null>(null);
   const [links, setLinks] = useState(mockLinks);
+  const [isDarkMode, setIsDarkMode] = useState(true);
 
-  // Mock handlers - Replace with actual implementations
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+    document.documentElement.classList.toggle('dark');
+  };
+
   const handleDeleteLink = (id: string) => {
     setLinks(links.filter(link => link.id !== id));
     console.log("Delete link:", id);
@@ -108,23 +110,21 @@ export default function Dashboard() {
     return "new-collection-id";
   };
 
-  // Filter links based on search query
   const filteredLinks = links.filter(link => 
     link.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     link.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     link.notes?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Filter important links
   const importantLinks = filteredLinks.filter(link => link.isImportant);
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      {/* Header */}
+    <div className={`min-h-screen ${isDarkMode ? 'bg-black' : 'bg-white'} transition-colors duration-300`}>
       <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60">
-        <div className="container flex h-16 items-center">
-          <p className="text-2xl font-bold mx-3 font-poppins">linker'sdb</p>
-          <div className="flex items-center space-x-4 flex-1">
+        <div className="container flex h-16 items-center justify-between">
+          <p className="text-2xl font-bold mx-3 font-poppins text-white">linker'sdb</p>
+          <div className="flex items-center space-x-4">
+            <ThemeToggle isDarkMode={isDarkMode} onToggle={toggleTheme} />
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/50" />
               <Input
@@ -142,7 +142,6 @@ export default function Dashboard() {
         </div>
       </header>
 
-      {/* Main content */}
       <main className="container py-6 pb-20">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="text-white">
           <TabsList className="bg-zinc-950 border border-white/10">

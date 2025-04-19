@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -7,12 +6,15 @@ import { Logo } from "@/components/logo";
 import { Helmet } from "react-helmet";
 import img from "../undraw_dev-productivity_5wps_outline.svg";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { X, Twitter, Facebook, Instagram, Linkedin, Mail } from "lucide-react";
+import { Sun, Moon, X } from "lucide-react";
+import { Toggle } from "@/components/ui/toggle";
 import { NavigationBar } from "@/components/navigation-bar";
+import { Twitter, Facebook, Instagram, Linkedin, Mail } from "lucide-react";
 
 export default function Index() {
   const [showAuthForm, setShowAuthForm] = useState(false);
   const [showWarning, setShowWarning] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
 
   const handleAuthFormOpen = () => {
     setShowAuthForm(true);
@@ -20,8 +22,13 @@ export default function Index() {
     setTimeout(() => setShowWarning(false), 10000);
   };
 
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+    document.documentElement.classList.toggle('dark');
+  };
+
   return (
-    <div className="flex flex-col min-h-screen bg-black text-white font-poppins">
+    <div className={`flex flex-col min-h-screen ${isDarkMode ? 'bg-black' : 'bg-white'} text-white font-poppins transition-colors duration-300`}>
       <Helmet>
         <title>Linker's DB - Organize Your Digital World With Precision</title>
         <meta name="description" content="The most powerful link management platform for professionals, researchers, and content creators. Save, organize, and access your digital resources with unmatched efficiency." />
@@ -35,6 +42,20 @@ export default function Index() {
         <link rel="canonical" href="https://linkersdb.com" />
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
       </Helmet>
+
+      {/* Theme Toggle */}
+      <div className="fixed top-4 right-4 z-50">
+        <Toggle 
+          pressed={isDarkMode}
+          onPressedChange={toggleTheme}
+          className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+        >
+          {isDarkMode ? 
+            <Sun className="h-4 w-4 text-yellow-400" /> : 
+            <Moon className="h-4 w-4 text-white" />
+          }
+        </Toggle>
+      </div>
 
       <NavigationBar onAuthClick={handleAuthFormOpen} />
 
@@ -56,26 +77,25 @@ export default function Index() {
         </div>
       )}
 
-      <section className="flex min-h-screen items-center justify-center px-4 relative overflow-hidden bg-black" id="hero">
-        <div className="absolute inset-0 bg-black z-0"></div>
+      <section className="flex min-h-screen items-center justify-center px-4 relative overflow-hidden">
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
           <img
             src={img}
             alt="Background Outline"
-            className="h-full w-full object-bottom opacity-[0.03] transform scale-125 md:scale-110"
+            className="h-full w-full object-bottom opacity-[0.03] transform scale-125 md:scale-110 animate-pulse"
           />
         </div>
         <div className="container mx-auto z-10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="hidden md:flex flex-1 justify-center">
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center animate-in fade-in slide-in-from-left">
                 <span className="-rotate-90 text-5xl md:text-7xl font-bold tracking-tighter text-white hover:text-white transition-colors">
                   linker's db
                 </span>
               </div>
             </div>
             <div className="hidden md:block w-px h-64 bg-white/10 -ml-8"></div>
-            <div className="flex-1 px-4 md:px-0 max-w-3xl mx-auto text-center md:text-left">
+            <div className="flex-1 px-4 md:px-0 max-w-3xl mx-auto text-center md:text-left animate-in fade-in slide-in-from-right">
               <h1 className="text-3xl md:text-6xl font-bold tracking-tighter leading-tight text-center text-white mb-4 hover:text-white transition-colors">
                 Welcome to Linker's DB
               </h1>
@@ -89,7 +109,7 @@ export default function Index() {
               <div className="flex flex-col sm:flex-row gap-4 mt-8 justify-center">
                 <Button
                   onClick={handleAuthFormOpen}
-                  className="bg-white text-black border-2 border-white px-8 py-6 text-base font-medium shadow-lg hover:bg-white/90 transition-colors"
+                  className="bg-white text-black border-2 border-white px-8 py-6 text-base font-medium shadow-lg hover:bg-black hover:text-white transition-all duration-300 animate-in fade-in slide-in-from-bottom-4"
                 >
                   Start For Free
                 </Button>

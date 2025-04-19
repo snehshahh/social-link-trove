@@ -1,19 +1,13 @@
 
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Home, User, Folder, MessageSquare, Settings } from "lucide-react";
+import { User, Folder, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function BottomNavigation() {
   const location = useLocation();
   
   const navItems = [
-    {
-      icon: Home,
-      label: "Home",
-      href: "/",
-      active: location.pathname === "/"
-    },
     {
       icon: Folder,
       label: "Links",
@@ -31,12 +25,6 @@ export function BottomNavigation() {
       label: "Profile",
       href: "/profile",
       active: location.pathname === "/profile"
-    },
-    {
-      icon: Settings,
-      label: "Settings",
-      href: "/settings",
-      active: location.pathname === "/settings"
     }
   ];
   
@@ -49,11 +37,11 @@ export function BottomNavigation() {
             to={item.href}
             className={cn(
               "flex flex-col items-center justify-center w-full h-full px-2",
-              "transition-colors duration-200",
+              "transition-all duration-300 hover:scale-105",
               item.active ? "text-yellow-400" : "text-white/60 hover:text-white"
             )}
           >
-            <item.icon className="h-5 w-5 mb-1" />
+            <item.icon className="h-5 w-5 mb-1 transition-transform duration-300 hover:scale-110" />
             <span className="text-xs font-medium">{item.label}</span>
           </Link>
         ))}
