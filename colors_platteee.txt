@@ -1,7 +1,6 @@
-
 # Linker's DB Color Palette
 
-## Primary Colors
+## Dark Mode Colors
 - Black (#000000): Main background color
 - White (#FFFFFF): Primary text and borders
 - Yellow Accent (#EAB308): Highlight color for important elements
@@ -40,3 +39,61 @@
 - Use the yellow accent sparingly for maximum impact
 - Darker backgrounds for alternating sections create visual separation
 - Subtle hover effects enhance interactivity without breaking the dark theme
+
+## Light Mode Colors
+- Background: #FFFFFF
+- Text Primary: #121212
+- Text Secondary: #4A4A4A
+- Border Color: rgba(0, 0, 0, 0.1)
+- Card Background: #F8F9FA
+- Card Hover: #F1F3F5
+- Primary Button: #121212
+- Primary Button Text: #FFFFFF
+- Secondary Button: #FFFFFF
+- Secondary Button Text: #121212
+- Accent: #EAB308
+- Success: #22C55E
+- Warning: #F59E0B
+- Error: #EF4444
+- Input Background: #F1F3F5
+- Input Border: rgba(0, 0, 0, 0.1)
+- Input Text: #121212
+- Input Placeholder: #9CA3AF
+- Link: #2563EB
+- Link Hover: #1D4ED8
+- Divider: rgba(0, 0, 0, 0.05)
+- Icon: #4B5563
+- Icon Hover: #1F2937
+- Toast Background: #FFFFFF
+- Toast Border: rgba(0, 0, 0, 0.05)
+- Toast Text: #121212
+- Dropdown Background: #FFFFFF
+- Dropdown Border: rgba(0, 0, 0, 0.1)
+- Dropdown Hover: #F1F3F5
+- Checkbox Background: #FFFFFF
+- Checkbox Border: #D1D5DB
+- Checkbox Active: #121212
+- Button Disabled: #E5E7EB
+- Button Disabled Text: #9CA3AF
+
+## UI Element States
+- Hover States: 
+  * Light Gray: #F3F4F6
+  * Dark Gray: #1F2937
+  * Light Yellow: #FEF3C7
+  * Dark Yellow: #D97706
+- Focus States:
+  * Light Ring: rgba(0, 0, 0, 0.1)
+  * Dark Ring: rgba(255, 255, 255, 0.1)
+- Shadows:
+  * Light: 0 1px 3px rgba(0, 0, 0, 0.1)
+  * Medium: 0 4px 6px rgba(0, 0, 0, 0.1)
+  * Heavy: 0 10px 15px rgba(0, 0, 0, 0.1)
+
+## Notes for Implementation
+- Use darker shades for text to maintain readability
+- Maintain consistent spacing and padding
+- Use shadows sparingly for depth
+- Maintain high contrast ratios for accessibility
+- Use accent colors (yellow) strategically for emphasis
+- Apply hover states consistently across interactive elements
