@@ -1,5 +1,5 @@
 
-import { Inbox, Star, LinkIcon, Folder } from "lucide-react";
+import { Inbox, Star, LinkIcon, Folder, Plus } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { LinkCard } from "./link-card";
@@ -21,6 +21,7 @@ interface DashboardTabsProps {
   filteredLinks: Link[];
   importantLinks: Link[];
   collections: Collection[];
+  searchQuery?: string; // Added this prop
   onDeleteLink: (id: string) => void;
   onToggleImportant: (id: string, important: boolean) => void;
   onTogglePublic: (id: string, isPublic: boolean) => void;
@@ -35,6 +36,7 @@ export function DashboardTabs({
   filteredLinks,
   importantLinks,
   collections,
+  searchQuery = "", // Default value to prevent undefined
   onDeleteLink,
   onToggleImportant,
   onTogglePublic,
@@ -176,7 +178,7 @@ export function DashboardTabs({
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-lg font-medium text-white">Your Collections</h2>
             <Button className="bg-white border border-white/20 text-black hover:bg-black hover:text-white">
-              <BookmarkPlus className="h-4 w-4 mr-1" />
+              <Plus className="h-4 w-4 mr-1" />
               New Collection
             </Button>
           </div>

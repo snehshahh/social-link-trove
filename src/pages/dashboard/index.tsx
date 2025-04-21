@@ -1,6 +1,5 @@
 
 import { useState } from "react";
-import { BookmarkPlus } from "lucide-react";
 import { Link } from "@/types/link";
 import { SearchHeader } from "@/components/dashboard/search-header";
 import { DashboardTabs } from "@/components/dashboard/dashboard-tabs";
@@ -127,6 +126,7 @@ export default function Dashboard() {
           filteredLinks={filteredLinks}
           importantLinks={importantLinks}
           collections={mockCollections}
+          searchQuery={searchQuery} // Passing the searchQuery prop
           onDeleteLink={handleDeleteLink}
           onToggleImportant={handleToggleImportant}
           onTogglePublic={handleTogglePublic}
