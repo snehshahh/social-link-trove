@@ -1,9 +1,12 @@
-
 import { useState } from "react";
 import { Link } from "@/types/link";
 import { SearchHeader } from "@/components/dashboard/search-header";
 import { DashboardTabs } from "@/components/dashboard/dashboard-tabs";
 import { CollectionDialog } from "@/components/dashboard/collection-dialog";
+import { MessageHistory } from "@/components/messages/message-history";
+import { Grid } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 const mockLinks = [
   {
@@ -43,6 +46,30 @@ const mockCollections = [
     linkCount: 3,
     dateCreated: "2024-02-10T14:20:00Z",
   },
+];
+
+const mockMessages = [
+  {
+    id: "1",
+    content: "Just added a new article about React hooks to my collection.",
+    sender: "Alice Chen",
+    timestamp: new Date(2024, 3, 25, 14, 30),
+    avatar: "/avatars/alice.jpg"
+  },
+  {
+    id: "2",
+    content: "Found an interesting tutorial on TypeScript generics.",
+    sender: "Bob Smith",
+    timestamp: new Date(2024, 3, 25, 15, 45),
+    avatar: "/avatars/bob.jpg"
+  },
+  {
+    id: "3",
+    content: "Shared my frontend development resources collection.",
+    sender: "Carol White",
+    timestamp: new Date(2024, 3, 25, 16, 20),
+    avatar: "/avatars/carol.jpg"
+  }
 ];
 
 export default function Dashboard() {
@@ -111,7 +138,7 @@ export default function Dashboard() {
   const importantLinks = filteredLinks.filter(link => link.isImportant);
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? 'bg-black' : 'bg-white'} transition-colors duration-300`}>
+    <div className={`min-h-screen ${isDarkMode ? 'bg-zinc-950' : 'bg-zinc-50'} transition-colors duration-300`}>
       <SearchHeader
         isDarkMode={isDarkMode}
         onToggleTheme={toggleTheme}
@@ -119,21 +146,44 @@ export default function Dashboard() {
         onSearchChange={setSearchQuery}
       />
 
-      <main className="container py-6 pb-20">
-        <DashboardTabs
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          filteredLinks={filteredLinks}
-          importantLinks={importantLinks}
-          collections={mockCollections}
-          searchQuery={searchQuery} // Passing the searchQuery prop
-          onDeleteLink={handleDeleteLink}
-          onToggleImportant={handleToggleImportant}
-          onTogglePublic={handleTogglePublic}
-          onShareLink={handleShareLink}
-          onUpdateNotes={handleUpdateNotes}
-          onSaveToCollection={handleSaveToCollection}
-        />
+      <main className="container py-6 pb-20 grid grid-cols-1 lg:grid-cols-[1fr,320px] gap-6">
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-semibold text-zinc-200">Dashboard</h1>
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="text-zinc-400 border-zinc-800 hover:bg-zinc-900"
+            >
+              <Grid className="h-4 w-4 mr-2" />
+              View Options
+            </Button>
+          </div>
+          
+          <Separator className="bg-zinc-800" />
+          
+          <DashboardTabs
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            filteredLinks={filteredLinks}
+            importantLinks={importantLinks}
+            collections={mockCollections}
+            searchQuery={searchQuery}
+            onDeleteLink={handleDeleteLink}
+            onToggleImportant={handleToggleImportant}
+            onTogglePublic={handleTogglePublic}
+            onShareLink={handleShareLink}
+            onUpdateNotes={handleUpdateNotes}
+            onSaveToCollection={handleSaveToCollection}
+          />
+        </div>
+
+        <aside>
+          <div className="space-y-4">
+            <h2 className="text-lg font-medium text-zinc-200">Recent Activity</h2>
+            <MessageHistory messages={mockMessages} />
+          </div>
+        </aside>
       </main>
 
       <CollectionDialog

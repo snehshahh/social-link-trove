@@ -1,11 +1,10 @@
-
 import { Inbox, Star, LinkIcon, Folder, Plus } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
 import { LinkCard } from "./link-card";
 import { CollectionCard } from "./collection-card";
 import { EmptyState } from "./empty-state";
-import { Button } from "@/components/ui/button";
 import { Link } from "@/types/link";
 
 interface Collection {
@@ -21,7 +20,7 @@ interface DashboardTabsProps {
   filteredLinks: Link[];
   importantLinks: Link[];
   collections: Collection[];
-  searchQuery?: string; // Added this prop
+  searchQuery?: string;
   onDeleteLink: (id: string) => void;
   onToggleImportant: (id: string, important: boolean) => void;
   onTogglePublic: (id: string, isPublic: boolean) => void;
@@ -36,7 +35,7 @@ export function DashboardTabs({
   filteredLinks,
   importantLinks,
   collections,
-  searchQuery = "", // Default value to prevent undefined
+  searchQuery = "",
   onDeleteLink,
   onToggleImportant,
   onTogglePublic,
@@ -45,34 +44,34 @@ export function DashboardTabs({
   onSaveToCollection,
 }: DashboardTabsProps) {
   return (
-    <Tabs value={activeTab} onValueChange={onTabChange} className="text-white">
-      <TabsList className="bg-zinc-950 border border-white/10">
+    <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
+      <TabsList className="bg-zinc-900/50 border border-zinc-800 w-full justify-start">
         <TabsTrigger 
           value="recents" 
-          className="data-[state=active]:bg-black data-[state=active]:text-white data-[state=active]:shadow-sm text-white/70"
+          className="data-[state=active]:bg-zinc-800 data-[state=active]:text-white"
         >
-          <Inbox className="h-4 w-4 mr-1" />
+          <Inbox className="h-4 w-4 mr-2" />
           Recents
         </TabsTrigger>
         <TabsTrigger 
           value="important" 
-          className="data-[state=active]:bg-black data-[state=active]:text-yellow-400 data-[state=active]:shadow-sm text-white/70"
+          className="data-[state=active]:bg-zinc-800 data-[state=active]:text-white"
         >
-          <Star className="h-4 w-4 mr-1" />
+          <Star className="h-4 w-4 mr-2" />
           Important
         </TabsTrigger>
         <TabsTrigger 
           value="all" 
-          className="data-[state=active]:bg-black data-[state=active]:text-white data-[state=active]:shadow-sm text-white/70"
+          className="data-[state=active]:bg-zinc-800 data-[state=active]:text-white"
         >
-          <LinkIcon className="h-4 w-4 mr-1" />
+          <LinkIcon className="h-4 w-4 mr-2" />
           All
         </TabsTrigger>
         <TabsTrigger 
           value="collections" 
-          className="data-[state=active]:bg-black data-[state=active]:text-white data-[state=active]:shadow-sm text-white/70"
+          className="data-[state=active]:bg-zinc-800 data-[state=active]:text-white"
         >
-          <Folder className="h-4 w-4 mr-1" />
+          <Folder className="h-4 w-4 mr-2" />
           Collections
         </TabsTrigger>
       </TabsList>
@@ -96,16 +95,15 @@ export function DashboardTabs({
                 ))
               ) : (
                 <EmptyState
-                  icon={<Inbox className="h-8 w-8 text-white/50" />}
+                  icon={<Inbox className="h-8 w-8 text-zinc-500" />}
                   title="No links yet"
                   description="Add your first link to get started"
                   action={
-                    <Button className="bg-white border border-white/20 text-black hover:bg-black hover:text-white">
-                      <LinkIcon className="h-4 w-4 mr-1" />
+                    <Button className="bg-zinc-200 text-zinc-900 hover:bg-zinc-300">
+                      <LinkIcon className="h-4 w-4 mr-2" />
                       Add Link
                     </Button>
                   }
-                  className="bg-zinc-950 border-white/10"
                 />
               )}
             </div>
@@ -130,10 +128,10 @@ export function DashboardTabs({
                 ))
               ) : (
                 <EmptyState
-                  icon={<Star className="h-8 w-8 text-white/50" />}
+                  icon={<Star className="h-8 w-8 text-zinc-500" />}
                   title="No important links"
                   description="Mark links as important to see them here"
-                  className="bg-zinc-950 border-white/10"
+                  className="bg-zinc-900/50 border border-zinc-800"
                 />
               )}
             </div>
@@ -158,16 +156,16 @@ export function DashboardTabs({
                 ))
               ) : (
                 <EmptyState
-                  icon={<LinkIcon className="h-8 w-8 text-white/50" />}
+                  icon={<LinkIcon className="h-8 w-8 text-zinc-500" />}
                   title="No links found"
                   description={searchQuery ? "Try a different search term" : "Add your first link to get started"}
                   action={
-                    <Button className="bg-white border border-white/20 text-black hover:bg-black hover:text-white">
-                      <LinkIcon className="h-4 w-4 mr-1" />
+                    <Button className="bg-zinc-200 text-zinc-900 hover:bg-zinc-300">
+                      <LinkIcon className="h-4 w-4 mr-2" />
                       Add Link
                     </Button>
                   }
-                  className="bg-zinc-950 border-white/10"
+                  className="bg-zinc-900/50 border border-zinc-800"
                 />
               )}
             </div>
@@ -176,9 +174,9 @@ export function DashboardTabs({
 
         <TabsContent value="collections">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-lg font-medium text-white">Your Collections</h2>
-            <Button className="bg-white border border-white/20 text-black hover:bg-black hover:text-white">
-              <Plus className="h-4 w-4 mr-1" />
+            <h2 className="text-lg font-medium text-zinc-200">Your Collections</h2>
+            <Button className="bg-zinc-200 text-zinc-900 hover:bg-zinc-300">
+              <Plus className="h-4 w-4 mr-2" />
               New Collection
             </Button>
           </div>
