@@ -1,12 +1,10 @@
-export interface Link {
+export interface Collection {
   id: string; // UUID
   user_id: string; // UUID
-  url: string;
-  title?: string;
+  name: string;
   description?: string;
-  tags?: string[];
   shared_with?: string[];
-  bool_imp: boolean;
+  links: string[];
   isPublic: boolean;
   upvote: number;
   downvote: number;

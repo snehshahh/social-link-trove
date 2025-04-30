@@ -1,69 +1,68 @@
-# Welcome to your Lovable project
+# Social Link Trove
 
-## Project info
+A modern web application for managing and sharing social links.
 
-**URL**: https://lovable.dev/projects/605f13ea-4b9c-494a-99ad-2773dc199dc5
+## Getting Started
 
-## How can I edit this code?
+### Prerequisites
 
-There are several ways of editing your application.
+- Node.js (v18 or higher)
+- npm or yarn
 
-**Use Lovable**
+### Installation
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/605f13ea-4b9c-494a-99ad-2773dc199dc5) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+1. Clone the repository
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
 ```
 
-**Edit a file directly in GitHub**
+### Development
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+To start the development server:
 
-**Use GitHub Codespaces**
+```bash
+npm run dev
+# or
+yarn dev
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+The application will be available at `http://localhost:8080`
 
-## What technologies are used for this project?
+### Building for Production
 
-This project is built with .
+To create a production build:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+```bash
+npm run build
+# or
+yarn build
+```
 
-## How can I deploy this project?
+The built files will be in the `dist` directory.
 
-Simply open [Lovable](https://lovable.dev/projects/605f13ea-4b9c-494a-99ad-2773dc199dc5) and click on Share -> Publish.
+### Preview Production Build
 
-## I want to use a custom domain - is that possible?
+To preview the production build locally:
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+```bash
+npm run preview
+# or
+yarn preview
+```
+
+## Features
+
+- Modern React application with TypeScript
+- Responsive design with Tailwind CSS
+- Component library with Radix UI
+- Form handling with React Hook Form
+- State management with React Query
+- Routing with React Router
+- Beautiful UI components with shadcn/ui
+
+## License
+
+This project is licensed under the MIT License.

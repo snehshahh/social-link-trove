@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -33,11 +32,34 @@ export function NavigationBar({ onAuthClick }: NavigationBarProps) {
         
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
-          <Link to="#features" className="text-white/80 hover:text-white transition-colors">Features</Link>
-          <Link to="#use-cases" className="text-white/80 hover:text-white transition-colors">Use Cases</Link>
-          <Link to="#testimonials" className="text-white/80 hover:text-white transition-colors">Testimonials</Link>
-          <Link to="#faq" className="text-white/80 hover:text-white transition-colors">FAQ</Link>
-          
+          <Link 
+            to="#features" 
+            className="text-white/80 hover:text-white px-4 py-2 transition-colors"
+          >
+            Features
+          </Link>
+          <Link 
+            to="#use-cases" 
+            className="text-white/80 hover:text-white px-4 py-2 transition-colors"
+          >
+            Use Cases
+          </Link>
+          <Link 
+            to="#testimonials" 
+            className="text-white/80 hover:text-white px-4 py-2 transition-colors"
+          >
+            Testimonials
+          </Link>
+          <Link 
+            to="#faq" 
+            className="text-white/80 hover:text-white px-4 py-2 transition-colors"
+          >
+            FAQ
+          </Link>
+        </nav>
+        
+        {/* Action Buttons */}
+        <div className="hidden md:flex items-center space-x-4">
           <Button 
             variant="outline" 
             className="border-white text-white hover:bg-white hover:text-black transition-colors"
@@ -45,15 +67,14 @@ export function NavigationBar({ onAuthClick }: NavigationBarProps) {
           >
             Sign In
           </Button>
-          
           <Button 
             className="bg-white text-black hover:bg-white/90 transition-colors"
             onClick={onAuthClick}
           >
             Get Started
           </Button>
-        </nav>
-        
+        </div>
+
         {/* Mobile menu trigger */}
         <button 
           className="md:hidden text-white"

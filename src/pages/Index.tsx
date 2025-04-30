@@ -82,12 +82,12 @@ export default function Index() {
           <img
             src={img}
             alt="Background Outline"
-            className="h-full w-full object-bottom opacity-[0.03] transform scale-125 md:scale-110 animate-pulse"
+            className="h-full w-full object-bottom opacity-[0.1] transform scale-125 md:scale-110"
           />
         </div>
         <div className="container mx-auto z-10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="hidden md:flex flex-1 justify-center">
+            <div className="flex-1 justify-center">
               <div className="flex flex-col items-center animate-in fade-in slide-in-from-left">
                 <span className="-rotate-90 text-5xl md:text-7xl font-bold tracking-tighter text-white hover:text-white transition-colors">
                   linker's db
@@ -99,19 +99,22 @@ export default function Index() {
               <h1 className="text-3xl md:text-6xl font-bold tracking-tighter leading-tight text-center text-white mb-4 hover:text-white transition-colors">
                 Welcome to Linker's DB
               </h1>
-              <h2 className="text-xl md:text-3xl text-center font-semibold text-white/90 mb-6">
-                Your Links, Your Way, Shared with the World
-              </h2>
-              <p className="mt-4 text-lg md:text-xl text-white/70 text-center leading-relaxed">
-                The <span className="bg-yellow-400 text-black px-2 py-1 rounded font-bold">most powerful</span> link management platform for professionals, researchers, and content creators.
-                Save, organize, and access your digital resources with unmatched efficiency.
+              <p className="text-lg md:text-xl text-white/80 mb-8">
+                The most powerful link management platform for professionals, researchers, and content creators. Save, organize, and access your digital resources with unmatched efficiency.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 mt-8 justify-center">
-                <Button
+              <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+                <Button 
+                  variant="outline" 
+                  className="border-white text-white hover:bg-white hover:text-black w-full md:w-auto transition-colors"
                   onClick={handleAuthFormOpen}
-                  className="bg-white text-black border-2 border-white px-8 py-6 text-base font-medium shadow-lg hover:bg-black hover:text-white transition-all duration-300 animate-in fade-in slide-in-from-bottom-4"
                 >
-                  Start For Free
+                  Sign In
+                </Button>
+                <Button 
+                  className="bg-white text-black hover:bg-white/90 w-full md:w-auto transition-colors"
+                  onClick={handleAuthFormOpen}
+                >
+                  Get Started
                 </Button>
               </div>
             </div>
@@ -358,7 +361,7 @@ export default function Index() {
           </div>
           
           <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-white/50 text-sm mb-4 md:mb-0">© 2025 Linker's DB. All rights reserved.</p>
+            <p className="text-white/50 text-sm mb-4 md:mb-0"> 2025 Linker's DB. All rights reserved.</p>
             
             <div className="flex space-x-4">
               <a href="#" className="text-white/50 text-sm hover:text-white transition-colors">Privacy Policy</a>

@@ -1,10 +1,10 @@
-
 import React, { useState } from "react";
 import { CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Share, Mail, UserPlus } from "lucide-react";
+import { SharePopup } from "@/components/ui/share-popup";
 
 interface Friend {
   id: string;
@@ -17,6 +17,8 @@ interface Friend {
 
 export function FriendsList() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null);
+  const [isSharePopupOpen, setIsSharePopupOpen] = useState(false);
   const [friends, setFriends] = useState<Friend[]>([
     {
       id: "1",
@@ -56,6 +58,11 @@ export function FriendsList() {
     friend.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     friend.username.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleShare = (friend: Friend) => {
+    setSelectedFriend(friend);
+    setIsSharePopupOpen(true);
+  };
 
   return (
     <CardContent className="p-6">
@@ -119,6 +126,7 @@ export function FriendsList() {
                     variant="outline" 
                     className="text-white border-white/20 hover:bg-white/10"
                     size="icon"
+                    onClick={() => handleShare(friend)}
                   >
                     <Share className="h-4 w-4" />
                   </Button>
@@ -132,6 +140,16 @@ export function FriendsList() {
           )}
         </div>
       </div>
+
+      {selectedFriend && (
+        <SharePopup
+          isOpen={isSharePopupOpen}
+          onClose={() => setIsSharePopupOpen(false)}
+          title={selectedFriend.name}
+          shareUrl={`https://linkersdb.com/friends/${selectedFriend.username}`}
+          type="friend"
+        />
+      )}
     </CardContent>
   );
 }

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { BookmarkPlus, X } from "lucide-react";
 import { toast } from "sonner";
@@ -20,7 +19,8 @@ interface CollectionDialogProps {
   linkId: string;
   collections: Collection[];
   onAddToCollection: (linkId: string, collectionId: string) => void;
-  onCreateCollection: (name: string) => Promise<string>;
+  onRemoveFromCollection: (collectionId: string, linkId: string) => void;
+  onCreateCollection: (name: string) => Promise<void>;
 }
 
 export function CollectionDialog({
@@ -29,6 +29,7 @@ export function CollectionDialog({
   linkId,
   collections,
   onAddToCollection,
+  onRemoveFromCollection,
   onCreateCollection,
 }: CollectionDialogProps) {
   const [selectedCollection, setSelectedCollection] = useState<string | null>(null);
@@ -45,8 +46,7 @@ export function CollectionDialog({
 
       setIsCreating(true);
       try {
-        const newCollectionId = await onCreateCollection(newCollectionName);
-        onAddToCollection(linkId, newCollectionId);
+        await onCreateCollection(newCollectionName);
         toast.success(`Added to "${newCollectionName}" collection`);
         onOpenChange(false);
         resetForm();
