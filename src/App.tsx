@@ -31,7 +31,7 @@ const App = () => {
                 path="/dashboard"
                 element={
                   <div className="flex flex-col h-screen">
-                    <div className="flex-1">
+                    <div className="flex-1 pt-16 md:pt-20 overflow-y-auto">
                       <Dashboard />
                     </div>
                   </div>
@@ -41,7 +41,7 @@ const App = () => {
                 path="/profile"
                 element={
                   <div className="flex flex-col h-screen bg-black">
-                    <div className="flex-1">
+                    <div className="flex-1 pt-16 md:pt-20 overflow-y-auto">
                       <div className="container mx-auto px-4">
                         <Profile />
                       </div>
@@ -54,7 +54,7 @@ const App = () => {
                 path="/messages"
                 element={
                   <div className="flex flex-col h-screen bg-black">
-                    <div className="flex-1">
+                    <div className="flex-1 pt-16 md:pt-20 overflow-y-auto">
                       <div className="container mx-auto px-4">
                         <MessagePage />
                       </div>
@@ -67,7 +67,7 @@ const App = () => {
                 path="/settings"
                 element={
                   <div className="flex flex-col h-screen bg-black">
-                    <div className="flex-1">
+                    <div className="flex-1 pt-16 md:pt-20 overflow-y-auto">
                       <div className="container mx-auto px-4">
                         <h1 className="text-2xl font-bold text-white mb-6">Settings</h1>
                         <p className="text-white/70">This feature is coming soon...</p>

@@ -29,6 +29,8 @@ export function MessageHistory() {
       sender: isSender ? "You" : `User ${message.sender_id.replace('user', '')}`,
       timestamp: new Date(message.timestamp),
       avatar: isSender ? "/avatars/user123.png" : `/avatars/${message.sender_id}.png`,
+      shared_link_id: message.shared_link_id,
+      shared_collection_id: message.shared_collection_id,
     };
   });
 
@@ -41,18 +43,18 @@ export function MessageHistory() {
   }
 
   return (
-    <Card className="border border-zinc-800 bg-zinc-950">
+    <Card className="border border-zinc-800 bg-zinc-950/80 backdrop-blur-sm shadow-md hover:shadow-zinc-800/20 transition-shadow">
       <CardContent className="p-0">
-        <ScrollArea className="h-[500px] w-full">
+        <ScrollArea className="h-[calc(100vh-350px)] min-h-[400px] w-full">
           <div className="flex flex-col gap-4 p-4">
             {transformedMessages.map((message) => (
               <div
                 key={message.id}
-                className="flex items-start gap-3 animate-fade-in"
+                className={`flex items-start gap-3 animate-in fade-in slide-in-from-${message.sender === 'You' ? 'right' : 'left'} duration-300`}
               >
-                <Avatar className="h-8 w-8 border border-zinc-800">
+                <Avatar className="h-10 w-10 border border-zinc-700 shadow-sm">
                   <AvatarImage src={message.avatar} />
-                  <AvatarFallback className="bg-zinc-900 text-zinc-400">
+                  <AvatarFallback className="bg-zinc-800 text-zinc-300">
                     {message.sender[0].toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
@@ -65,9 +67,21 @@ export function MessageHistory() {
                       {formatDistanceToNow(message.timestamp, { addSuffix: true })}
                     </span>
                   </div>
-                  <p className="mt-1 text-sm text-zinc-400 leading-relaxed">
-                    {message.content}
-                  </p>
+                  <div className={`mt-1 p-3 rounded-lg ${message.sender === 'You' ? 'bg-zinc-800/70 ml-auto mr-0 rounded-tr-none' : 'bg-zinc-900/70 rounded-tl-none'} max-w-[85%] shadow-sm`}>
+                    <p className="text-sm text-zinc-300 leading-relaxed break-words">
+                      {message.content}
+                    </p>
+                    {message.shared_link_id && (
+                      <div className="mt-2 pt-2 border-t border-zinc-700/50">
+                        <div className="flex items-center gap-2">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                          </svg>
+                          <span className="text-xs text-blue-400 hover:underline cursor-pointer">View shared link</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}

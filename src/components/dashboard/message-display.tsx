@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatDistanceToNow } from 'date-fns';
 import { User } from '@/types/user';
@@ -13,6 +14,7 @@ interface MessageDisplayProps {
 export function MessageDisplay({ messages, users }: MessageDisplayProps) {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [chatMessages, setChatMessages] = useState<Message[]>([]);
+  const [activeTab, setActiveTab] = useState<'all' | 'links' | 'collections'>('all');
 
   useEffect(() => {
     if (selectedUser) {
@@ -99,60 +101,127 @@ export function MessageDisplay({ messages, users }: MessageDisplayProps) {
       <div className="flex-1">
         {selectedUser ? (
           <div className="h-full flex flex-col">
-            <Card className="flex-1 overflow-y-auto">
-              <CardHeader>
-                <div className="flex items-center">
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage src={getUserAvatar(selectedUser.id)} />
-                    <AvatarFallback>{selectedUser.name[0]}</AvatarFallback>
-                  </Avatar>
-                  <div className="ml-3">
-                    <h3 className="font-medium text-white">{selectedUser.name}</h3>
-                    <p className="text-white/70 text-sm">Active now</p>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="pt-4">
-                {chatMessages.map((message, index) => (
+            {/* Tabs */}
+            <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'all' | 'links' | 'collections')} className="w-full">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="all">All</TabsTrigger>
+                <TabsTrigger value="links">Shared Links</TabsTrigger>
+                <TabsTrigger value="collections">Collections</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="all" className="flex-1 overflow-y-auto">
+                {chatMessages.map((msg, index) => (
                   <div
-                    key={message.id}
-                    className={(
-                      `flex items-end mb-4
-                      ${message.sender_id === selectedUser.id ? 'justify-end' : 'justify-start'}`
-                    )}
+                    key={msg.id}
+                    className={`p-4 border-b border-white/10 ${
+                      index === chatMessages.length - 1 ? 'border-b-0' : ''
+                    }`}
                   >
-                    <div
-                      className={(
-                        `max-w-[70%] rounded-lg p-3
-                        ${message.sender_id === selectedUser.id ? 
-                          'bg-white/10 text-white' : 
-                          'bg-white/5 text-white'
-                        }`
-                      )}
-                    >
-                      <p>{message.content}</p>
-                      <p className="text-white/50 text-xs mt-1">
-                        {formatMessageTime(message.timestamp)}
-                      </p>
+                    <div className="flex items-start gap-3">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={getUserAvatar(msg.sender_id)} />
+                        <AvatarFallback>{getUserName(msg.sender_id)[0]}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <div className="flex justify-between items-start">
+                          <h4 className="text-white font-medium">{getUserName(msg.sender_id)}</h4>
+                          <span className="text-white/50 text-sm">
+                            {formatMessageTime(msg.timestamp)}
+                          </span>
+                        </div>
+                        <p className="text-white/70 mt-1">{msg.content}</p>
+                        
+                        {msg.shared_link_id && (
+                          <div className="mt-2 p-3 bg-zinc-950 rounded-lg border border-white/10">
+                            <div className="flex items-center gap-2">
+                              <span className="text-yellow-400">🔗</span>
+                              <span className="text-white/90">Shared Link</span>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {msg.shared_collection_id && (
+                          <div className="mt-2 p-3 bg-zinc-950 rounded-lg border border-white/10">
+                            <div className="flex items-center gap-2">
+                              <span className="text-yellow-400">📚</span>
+                              <span className="text-white/90">Shared Collection</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))}
-              </CardContent>
-            </Card>
+              </TabsContent>
 
-            {/* Message Input (to be implemented) */}
-            <div className="border-t border-white/10 p-4">
-              <div className="flex items-center gap-3">
-                <input
-                  type="text"
-                  placeholder="Type a message..."
-                  className="flex-1 bg-white/5 text-white rounded-lg px-4 py-2"
-                />
-                <button className="px-4 py-2 bg-white/10 text-white rounded-lg hover:bg-white/20 transition-colors">
-                  Send
-                </button>
-              </div>
-            </div>
+              <TabsContent value="links" className="flex-1 overflow-y-auto">
+                {chatMessages
+                  .filter(msg => msg.shared_link_id)
+                  .map((msg, index) => (
+                    <div
+                      key={msg.id}
+                      className={`p-4 border-b border-white/10 ${
+                        index === chatMessages.length - 1 ? 'border-b-0' : ''
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage src={getUserAvatar(msg.sender_id)} />
+                          <AvatarFallback>{getUserName(msg.sender_id)[0]}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                          <div className="flex justify-between items-start">
+                            <h4 className="text-white font-medium">{getUserName(msg.sender_id)}</h4>
+                            <span className="text-white/50 text-sm">
+                              {formatMessageTime(msg.timestamp)}
+                            </span>
+                          </div>
+                          <div className="mt-2 p-3 bg-zinc-950 rounded-lg border border-white/10">
+                            <div className="flex items-center gap-2">
+                              <span className="text-yellow-400">🔗</span>
+                              <span className="text-white/90">Shared Link</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </TabsContent>
+
+              <TabsContent value="collections" className="flex-1 overflow-y-auto">
+                {chatMessages
+                  .filter(msg => msg.shared_collection_id)
+                  .map((msg, index) => (
+                    <div
+                      key={msg.id}
+                      className={`p-4 border-b border-white/10 ${
+                        index === chatMessages.length - 1 ? 'border-b-0' : ''
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage src={getUserAvatar(msg.sender_id)} />
+                          <AvatarFallback>{getUserName(msg.sender_id)[0]}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                          <div className="flex justify-between items-start">
+                            <h4 className="text-white font-medium">{getUserName(msg.sender_id)}</h4>
+                            <span className="text-white/50 text-sm">
+                              {formatMessageTime(msg.timestamp)}
+                            </span>
+                          </div>
+                          <div className="mt-2 p-3 bg-zinc-950 rounded-lg border border-white/10">
+                            <div className="flex items-center gap-2">
+                              <span className="text-yellow-400">📚</span>
+                              <span className="text-white/90">Shared Collection</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+              </TabsContent>
+            </Tabs>
           </div>
         ) : (
           <div className="flex items-center justify-center h-full">
