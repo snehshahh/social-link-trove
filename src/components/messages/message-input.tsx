@@ -14,8 +14,7 @@ export function MessageInput() {
   const dispatch = useDispatch<AppDispatch>();
   const currentChat = useSelector((state: RootState) => state.messages.currentChat);
   const currentUserId = "user123"; // This would come from authentication in a real app
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
+  const { isDark } = useTheme();
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,7 +76,7 @@ export function MessageInput() {
             } group transition-all duration-200 sm:w-auto w-full`}
             disabled={!message.trim() || !currentChat}
           >
-            <Plane className={`h-4 w-4 mr-2 group-hover:text-blue-400 transition-colors`} />
+            <Plane className={`h-4 w-4 mr-2 ${isDark ? "text-blue-400" : "text-purple-500"} transition-colors`} />
             Send
           </Button>
         </form>

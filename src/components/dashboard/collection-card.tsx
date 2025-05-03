@@ -89,6 +89,12 @@ export default function CollectionCard({
     }
   };
 
+  // Theme-specific colors
+  const accentColor = isDark ? "yellow" : "purple";
+  const accentLight = isDark ? `${accentColor}-400` : `${accentColor}-400`;
+  const accentMedium = isDark ? `${accentColor}-500` : `${accentColor}-500`;
+  const accentDark = isDark ? `${accentColor}-600` : `${accentColor}-600`;
+
   return (
     <div 
       className={`group relative overflow-hidden rounded-xl ${
@@ -106,24 +112,24 @@ export default function CollectionCard({
       {/* Animated accent bar */}
       <div className={`absolute top-0 left-0 w-full h-1 ${
         isDark
-          ? "bg-gradient-to-r from-yellow-400/10 via-yellow-400/50 to-yellow-400/10"
-          : "bg-gradient-to-r from-blue-400/10 via-blue-400/50 to-blue-400/10"
+          ? `bg-gradient-to-r from-${accentColor}-400/10 via-${accentColor}-400/50 to-${accentColor}-400/10`
+          : `bg-gradient-to-r from-${accentColor}-400/10 via-${accentColor}-400/50 to-${accentColor}-400/10`
       } transform transition-transform duration-700 group-hover:scale-110`}></div>
       
       {/* Collection icon with pulse effect */}
       <div className={`absolute top-4 right-4 flex items-center justify-center size-10 rounded-full ${
         isDark
-          ? "bg-black/50 backdrop-blur border border-white/10 group-hover:bg-yellow-500/10 group-hover:border-yellow-500/20"
-          : "bg-white/50 backdrop-blur border border-zinc-200 group-hover:bg-blue-500/10 group-hover:border-blue-500/20"
+          ? `bg-black/50 backdrop-blur border border-white/10 group-hover:bg-${accentColor}-500/10 group-hover:border-${accentColor}-500/20`
+          : `bg-white/50 backdrop-blur border border-zinc-200 group-hover:bg-${accentColor}-500/10 group-hover:border-${accentColor}-500/20`
       } transition-all duration-500`}>
         <BookOpen className={`h-5 w-5 ${
           isDark
-            ? "text-yellow-400 group-hover:text-yellow-300"
-            : "text-blue-500 group-hover:text-blue-400"
+            ? `text-${accentColor}-400 group-hover:text-${accentColor}-300`
+            : `text-${accentColor}-500 group-hover:text-${accentColor}-400`
         } transition-all duration-500`} />
         {isHovered && (
           <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${
-            isDark ? "bg-yellow-400" : "bg-blue-400"
+            isDark ? `bg-${accentColor}-400` : `bg-${accentColor}-400`
           } opacity-20`}></span>
         )}
       </div>
@@ -138,8 +144,8 @@ export default function CollectionCard({
               placeholder="Collection name"
               className={`w-full p-2 rounded-md transition-all ${
                 isDark
-                  ? "bg-black/50 border border-white/10 text-white focus:border-yellow-400/50 focus:outline-none focus:ring-2 focus:ring-yellow-400/20"
-                  : "bg-white border border-zinc-200 text-zinc-800 focus:border-blue-400/50 focus:outline-none focus:ring-2 focus:ring-blue-400/20"
+                  ? `bg-black/50 border border-white/10 text-white focus:border-${accentColor}-400/50 focus:outline-none focus:ring-2 focus:ring-${accentColor}-400/20`
+                  : `bg-white border border-zinc-200 text-zinc-800 focus:border-${accentColor}-400/50 focus:outline-none focus:ring-2 focus:ring-${accentColor}-400/20`
               }`}
               autoFocus
             />
@@ -148,8 +154,8 @@ export default function CollectionCard({
           <>
             <h3 className={`text-xl font-medium pt-1 pr-12 ${
               isDark
-                ? "text-white group-hover:text-yellow-400"
-                : "text-zinc-800 group-hover:text-blue-500"
+                ? `text-white group-hover:text-${accentColor}-400`
+                : `text-zinc-800 group-hover:text-${accentColor}-500`
               } transition-colors duration-300 truncate`}>
               {name}
             </h3>
@@ -159,7 +165,7 @@ export default function CollectionCard({
                   ? "text-white/70 bg-black/50 border border-white/10"
                   : "text-zinc-700 bg-zinc-100 border border-zinc-200"
               }`}>
-                <Link2 className={`h-3 w-3 mr-1 ${isDark ? "text-yellow-400" : "text-blue-500"}`} />
+                <Link2 className={`h-3 w-3 mr-1 text-${accentColor}-${isDark ? '400' : '500'}`} />
                 {linkCount} {linkCount === 1 ? "link" : "links"}
               </span>
             </div>
@@ -180,7 +186,7 @@ export default function CollectionCard({
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent animate-pulse"></div>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <Link2 className={`h-6 w-6 ${isDark ? "text-yellow-400" : "text-blue-500"}`} />
+                    <Link2 className={`h-6 w-6 text-${accentColor}-${isDark ? '400' : '500'}`} />
                   </div>
                 </div>
               ))}
@@ -267,7 +273,7 @@ export default function CollectionCard({
             >
               {isSaving ? (
                 <span className="flex items-center">
-                  <svg className={`animate-spin -ml-1 mr-2 h-4 w-4 ${isDark ? "text-yellow-400" : "text-blue-500"}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <svg className={`animate-spin -ml-1 mr-2 h-4 w-4 text-${accentColor}-${isDark ? '400' : '500'}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
@@ -287,7 +293,7 @@ export default function CollectionCard({
               className={`p-2 rounded-full ${
                 isDark
                   ? "text-white/70 hover:text-yellow-400 hover:bg-white/5"
-                  : "text-zinc-500 hover:text-blue-500 hover:bg-zinc-100"
+                  : "text-zinc-500 hover:text-purple-500 hover:bg-zinc-100"
               } transition-colors`}
               onClick={(e) => {
                 e.stopPropagation();
@@ -302,7 +308,7 @@ export default function CollectionCard({
                 className={`p-2 rounded-full ${
                   isDark
                     ? "text-white/70 hover:text-yellow-400 hover:bg-white/5"
-                    : "text-zinc-500 hover:text-blue-500 hover:bg-zinc-100"
+                    : "text-zinc-500 hover:text-purple-500 hover:bg-zinc-100"
                 } transition-colors`}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -316,7 +322,7 @@ export default function CollectionCard({
                 className={`p-2 rounded-full ${
                   isDark
                     ? "text-white/70 hover:text-yellow-400 hover:bg-white/5"
-                    : "text-zinc-500 hover:text-blue-500 hover:bg-zinc-100"
+                    : "text-zinc-500 hover:text-purple-500 hover:bg-zinc-100"
                 } transition-colors`}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -330,7 +336,7 @@ export default function CollectionCard({
                 className={`p-2 rounded-full ${
                   isDark
                     ? "text-white/70 hover:text-yellow-400 hover:bg-white/5"
-                    : "text-zinc-500 hover:text-blue-500 hover:bg-zinc-100" 
+                    : "text-zinc-500 hover:text-purple-500 hover:bg-zinc-100" 
                 } transition-colors`}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -344,7 +350,7 @@ export default function CollectionCard({
                 className={`p-2 rounded-full ${
                   isDark
                     ? "text-white/70 hover:text-yellow-400 hover:bg-white/5"
-                    : "text-zinc-500 hover:text-blue-500 hover:bg-zinc-100"
+                    : "text-zinc-500 hover:text-purple-500 hover:bg-zinc-100"
                 } transition-colors`}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -362,8 +368,8 @@ export default function CollectionCard({
       {isHovered && !isEditing && !showConfirmDelete && (
         <div className={`absolute inset-0 ${
           isDark
-            ? "bg-gradient-to-t from-yellow-400/5 to-transparent"
-            : "bg-gradient-to-t from-blue-400/5 to-transparent"
+            ? `bg-gradient-to-t from-${accentColor}-400/5 to-transparent`
+            : `bg-gradient-to-t from-${accentColor}-400/5 to-transparent`
         } pointer-events-none`}></div>
       )}
       
