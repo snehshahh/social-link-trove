@@ -15,7 +15,8 @@ export function MessageHistory() {
   const dispatch = useDispatch<AppDispatch>();
   const { messages, loading, error } = useSelector((state: RootState) => state.messages);
   const currentUserId = "user123"; // This would come from authentication in a real app
-  const { isDark } = useTheme();
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   useEffect(() => {
     // Fetch messages for the current user
@@ -89,7 +90,7 @@ export function MessageHistory() {
                         {contact.name}
                       </span>
                       {contact.unread > 0 && (
-                        <Badge variant="default" className={`${isDark ? 'bg-yellow-500' : 'bg-purple-500'} text-white ml-2 text-xs`}>
+                        <Badge variant="default" className={`${isDark ? 'bg-yellow-500' : 'bg-yellow-400'} text-black ml-2 text-xs`}>
                           {contact.unread}
                         </Badge>
                       )}

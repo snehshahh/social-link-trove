@@ -50,15 +50,6 @@ export function DashboardTabs({
 
   const importantLinks = filteredLinks.filter(link => link.bool_imp);
 
-  // Update the highlight color based on theme
-  const highlightColor = isDark ? "text-yellow-400" : "text-purple-500";
-  const activeTabBgClass = isDark 
-    ? "from-zinc-800 to-zinc-900 text-white" 
-    : "from-white to-zinc-50 text-zinc-900";
-  const highlightBgClass = isDark
-    ? "bg-yellow-400/70" 
-    : "bg-purple-500/70";
-
   // Tab configuration with all necessary data
   const tabConfig = [
     {
@@ -109,7 +100,9 @@ export function DashboardTabs({
               value={tab.id}
               className={`relative flex-1 py-3 px-6 rounded-lg transition-all duration-300 ${
                 activeTab === tab.id 
-                  ? `bg-gradient-to-br ${activeTabBgClass} shadow-lg ${isDark ? 'shadow-black/20' : 'shadow-zinc-300/30'}`
+                  ? isDark
+                    ? 'bg-gradient-to-br from-zinc-800 to-zinc-900 text-white shadow-lg shadow-black/20'
+                    : 'bg-gradient-to-br from-white to-zinc-50 text-zinc-900 shadow-md shadow-zinc-300/30'
                   : isDark
                     ? 'text-zinc-400 hover:text-zinc-300'
                     : 'text-zinc-600 hover:text-zinc-800'
@@ -124,13 +117,21 @@ export function DashboardTabs({
               onMouseLeave={() => setHoveredTab(null)}
             >
               <div className="flex items-center justify-center gap-2">
-                <tab.icon className={`h-4 w-4 ${activeTab === tab.id ? highlightColor : ''}`} />
+                <tab.icon className={`h-4 w-4 ${
+                  activeTab === tab.id 
+                    ? isDark
+                      ? 'text-yellow-400'
+                      : 'text-blue-500'
+                    : ''
+                }`} />
                 <span className="font-medium">{tab.label}</span>
               </div>
               
               {/* Animated highlight for active tab */}
               {activeTab === tab.id && (
-                <div className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-12 h-1 rounded-full ${highlightBgClass}`}></div>
+                <div className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-12 h-1 rounded-full ${
+                  isDark ? 'bg-yellow-400/70' : 'bg-blue-500/70'
+                }`}></div>
               )}
             </TabsTrigger>
           ))}
@@ -175,7 +176,7 @@ export function DashboardTabs({
           <div className="mb-6">
             <div className={`flex justify-between items-center ${isDark ? 'bg-zinc-900/30' : 'bg-white/30'} backdrop-blur-sm p-4 rounded-lg border ${isDark ? 'border-zinc-800' : 'border-zinc-200'}`}>
               <div className="flex items-center">
-                <Folder className={`h-5 w-5 mr-2 ${isDark ? 'text-yellow-400' : 'text-purple-500'}`} />
+                <Folder className={`h-5 w-5 mr-2 ${isDark ? 'text-yellow-400' : 'text-blue-500'}`} />
                 <h2 className={`text-lg font-medium ${isDark ? 'text-zinc-200' : 'text-zinc-800'}`}>
                   Your Collections
                 </h2>
