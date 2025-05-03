@@ -1,3 +1,4 @@
+
 import { useSelector, useDispatch } from 'react-redux';
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -7,6 +8,7 @@ import { LinkCardHeader } from "./link-card-header";
 import { RootState } from '@/store';
 import { setIsEditing, setEditedNotes, setIsSaving, setShowFullDescription, setIsPreviewOpen } from '@/store/slices/linkCardSlice';
 import { Link } from '@/types/link';
+import { useTheme } from '@/hooks/use-theme';
 
 interface LinkCardProps {
   link: Link;
@@ -17,6 +19,7 @@ export function LinkCard({
 }: LinkCardProps) {
   const dispatch = useDispatch();
   const { isEditing, editedNotes, showFullDescription, isPreviewOpen } = useSelector((state: RootState) => state.linkCard);
+  const { theme, isDark } = useTheme();
 
   const handleTogglePreview = () => {
     dispatch(setIsPreviewOpen(!isPreviewOpen));
@@ -38,7 +41,8 @@ export function LinkCard({
 
   return (
     <Card className={cn(
-      "overflow-hidden transition-all duration-300 group hover:shadow-md bg-black border border-white/10 hover:border-white/20", 
+      "overflow-hidden transition-all duration-300 group hover:shadow-md", 
+      isDark ? "bg-black border border-white/10 hover:border-white/20" : "bg-white border border-zinc-200 hover:border-zinc-300",
       link.bool_imp && "border-l-4 border-l-yellow-400",
       "animate-fade-in"
     )}>
@@ -64,7 +68,10 @@ export function LinkCard({
       
       {isPreviewOpen && (
         <div className="px-6 pb-4 -mt-2">
-          <div className="w-full overflow-hidden rounded-lg border border-white/10">
+          <div className={cn(
+            "w-full overflow-hidden rounded-lg", 
+            isDark ? "border border-white/10" : "border border-zinc-200"
+          )}>
             <iframe 
               src={link.url} 
               title={link.title}
@@ -80,9 +87,13 @@ export function LinkCard({
       </CardContent>
 
       <CardFooter className={cn(
-        "flex flex-wrap items-center justify-between border-t border-white/10 pt-4 gap-2",
+        "flex flex-wrap items-center justify-between pt-4 gap-2",
+        isDark ? "border-t border-white/10" : "border-t border-zinc-200"
       )}>
-        <div className="text-xs text-white/50">
+        <div className={cn(
+          "text-xs",
+          isDark ? "text-white/50" : "text-zinc-500"
+        )}>
           Added on {link.created_at}
         </div>
         <div className="flex flex-wrap gap-2">

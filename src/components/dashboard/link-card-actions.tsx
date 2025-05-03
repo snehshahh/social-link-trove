@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Share, Star, Trash2, Edit, BookmarkPlus, Bookmark, X } from "lucide-react";
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,7 +8,8 @@ import { setShowSharePopup, setShowPublicConfirmation } from "@/store/slices/uiS
 import { SharePopup } from "@/components/share-popup";
 import { PublicConfirmationDialog } from "@/components/ui/public-confirmation-dialog";
 import { toast } from "sonner";
-
+import { useTheme } from "@/hooks/use-theme";
+import { cn } from "@/lib/utils";
 
 interface LinkCardActionsProps {
   id: string;
@@ -18,7 +20,6 @@ interface LinkCardActionsProps {
   onEdit: () => void;
 }
 
-// Lines 25-31: Remove these props from the function parameters
 export function LinkCardActions({
   id,
   title,
@@ -28,6 +29,7 @@ export function LinkCardActions({
   onEdit,
 }: LinkCardActionsProps) {
   const dispatch = useDispatch();
+  const { isDark } = useTheme();
   const showSharePopup = useSelector((state: RootState) => state.ui.showSharePopup);
   const showPublicConfirmation = useSelector((state: RootState) => state.ui.showPublicConfirmation);
 
@@ -49,6 +51,12 @@ export function LinkCardActions({
     toast.success("Link removed");
   };
 
+  const buttonClassName = cn(
+    "border",
+    isDark 
+      ? "border-white/10 text-white/90 hover:bg-white/5 hover:text-white" 
+      : "border-zinc-200 text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900"
+  );
 
   if (variant === "collection") {
     return (
@@ -56,7 +64,7 @@ export function LinkCardActions({
         <Button
           size="sm"
           variant="outline"
-          className="border-white/10 text-white/90 hover:bg-white/5 hover:text-white"
+          className={buttonClassName}
           onClick={handleShare}
           disabled={!isPublic}
         >
@@ -66,10 +74,9 @@ export function LinkCardActions({
         <Button
           size="sm"
           variant="outline"
-          className="border-white/10 text-white/90 hover:bg-white/5 hover:text-white"
+          className={buttonClassName}
           onClick={() => {
             // Handle remove from collection directly here
-            // This would need to be implemented with the appropriate Redux action
             toast.success("Removed from collection");
           }}
         >
@@ -78,7 +85,11 @@ export function LinkCardActions({
         </Button>
         <Button
           size="sm"
-          className="bg-white border border-white/20 text-black hover:bg-black hover:text-white"
+          className={cn(
+            isDark 
+              ? "bg-white border border-white/20 text-black hover:bg-black hover:text-white" 
+              : "bg-zinc-900 border border-zinc-800 text-white hover:bg-zinc-800"
+          )}
           onClick={onEdit}
         >
           <Edit className="h-4 w-4 mr-1" />
@@ -94,7 +105,7 @@ export function LinkCardActions({
         <Button
           size="sm"
           variant="outline"
-          className="border-white/10 text-black/90 hover:bg-white/5 hover:text-white"
+          className={buttonClassName}
           onClick={handleToggleImportant}
         >
           <Star className="h-4 w-4 mr-1" />
@@ -103,7 +114,7 @@ export function LinkCardActions({
         <Button
           size="sm"
           variant="outline"
-          className="border-white/10 text-black/90 hover:bg-white/5 hover:text-white"
+          className={buttonClassName}
           onClick={handleShare}
         >
           <Share className="h-4 w-4 mr-1" />
@@ -112,7 +123,7 @@ export function LinkCardActions({
         <Button
           size="sm"
           variant="outline"
-          className="border-white/10 text-black/90 hover:bg-white/5 hover:text-white"
+          className={buttonClassName}
           onClick={handleDelete}
         >
           <Trash2 className="h-4 w-4 mr-1" />
