@@ -1,15 +1,13 @@
-import { Inbox, Star, LinkIcon, Folder, Plus, BookOpen, FolderPlus } from "lucide-react";
+
+import { Inbox, Star, LinkIcon, Folder, Plus } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { LinkCard } from "./link-card";
 import { EmptyState } from "./empty-state";
 import { Link } from "@/types/link";
-import { Collection } from "@/types/collection";
-import { useDispatch, useSelector } from 'react-redux';
-import { toggleImportant, togglePublic, deleteLink } from '@/store/slices/linksSlice';
-import { setShowSharePopup, setShowPublicConfirmation } from '@/store/slices/uiSlice';
 import CollectionCard from "./collection-card";
+import { useTheme } from "@/hooks/use-theme";
 
 interface CollectionInterface {
   id: string;
@@ -33,6 +31,7 @@ export function DashboardTabs({
   collections = [],
   searchQuery = "",
 }: DashboardTabsProps) {
+  const { isDark } = useTheme();
 
   // Add safety check to ensure links is an array before filtering
   const linksArray = Array.isArray(links) ? links : [];
@@ -51,31 +50,31 @@ export function DashboardTabs({
  
   return (
     <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
-      <TabsList className="bg-zinc-900/50 border border-zinc-800 w-full justify-start">
+      <TabsList className={`${isDark ? 'bg-zinc-900/50 border border-zinc-800' : 'bg-zinc-100/50 border border-zinc-200'} w-full justify-start`}>
         <TabsTrigger
           value="recents"
-          className="data-[state=active]:bg-zinc-800 data-[state=active]:text-white"
+          className={`data-[state=active]:${isDark ? 'bg-zinc-800 text-white' : 'bg-white text-zinc-900'}`}
         >
           <Inbox className="h-4 w-4 mr-2" />
           Recents
         </TabsTrigger>
         <TabsTrigger
           value="important"
-          className="data-[state=active]:bg-zinc-800 data-[state=active]:text-white"
+          className={`data-[state=active]:${isDark ? 'bg-zinc-800 text-white' : 'bg-white text-zinc-900'}`}
         >
           <Star className="h-4 w-4 mr-2" />
           Important
         </TabsTrigger>
         <TabsTrigger
           value="all"
-          className="data-[state=active]:bg-zinc-800 data-[state=active]:text-white"
+          className={`data-[state=active]:${isDark ? 'bg-zinc-800 text-white' : 'bg-white text-zinc-900'}`}
         >
           <LinkIcon className="h-4 w-4 mr-2" />
           All
         </TabsTrigger>
         <TabsTrigger
           value="collections"
-          className="data-[state=active]:bg-zinc-800 data-[state=active]:text-white"
+          className={`data-[state=active]:${isDark ? 'bg-zinc-800 text-white' : 'bg-white text-zinc-900'}`}
         >
           <Folder className="h-4 w-4 mr-2" />
           Collections
@@ -99,11 +98,15 @@ export function DashboardTabs({
                   title="No links yet"
                   description="Add your first link to get started"
                   action={
-                    <Button className="bg-zinc-200 text-zinc-900 hover:bg-zinc-300">
+                    <Button className={isDark ? 
+                      "bg-zinc-800 text-zinc-200 hover:bg-zinc-700" : 
+                      "bg-zinc-200 text-zinc-900 hover:bg-zinc-300"
+                    }>
                       <LinkIcon className="h-4 w-4 mr-2" />
                       Add Link
                     </Button>
                   }
+                  className={isDark ? "bg-zinc-900/50 border border-zinc-800" : "bg-white/50 border border-zinc-200"}
                 />
               )}
             </div>
@@ -125,7 +128,7 @@ export function DashboardTabs({
                   icon={<Star className="h-8 w-8 text-zinc-500" />}
                   title="No important links"
                   description="Mark links as important to see them here"
-                  className="bg-zinc-900/50 border border-zinc-800"
+                  className={isDark ? "bg-zinc-900/50 border border-zinc-800" : "bg-white/50 border border-zinc-200"}
                 />
               )}
             </div>
@@ -148,12 +151,15 @@ export function DashboardTabs({
                   title="No links found"
                   description={searchQuery ? "Try a different search term" : "Add your first link to get started"}
                   action={
-                    <Button className="bg-zinc-200 text-zinc-900 hover:bg-zinc-300">
+                    <Button className={isDark ? 
+                      "bg-zinc-800 text-zinc-200 hover:bg-zinc-700" : 
+                      "bg-zinc-200 text-zinc-900 hover:bg-zinc-300"
+                    }>
                       <LinkIcon className="h-4 w-4 mr-2" />
                       Add Link
                     </Button>
                   }
-                  className="bg-zinc-900/50 border border-zinc-800"
+                  className={isDark ? "bg-zinc-900/50 border border-zinc-800" : "bg-white/50 border border-zinc-200"}
                 />
               )}
             </div>
@@ -162,8 +168,11 @@ export function DashboardTabs({
 
         <TabsContent value="collections">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-lg font-medium text-zinc-200">Your Collections</h2>
-            <Button className="bg-zinc-200 text-zinc-900 hover:bg-zinc-300">
+            <h2 className={`text-lg font-medium ${isDark ? 'text-zinc-200' : 'text-zinc-800'}`}>Your Collections</h2>
+            <Button className={isDark ? 
+              "bg-zinc-800 text-zinc-200 hover:bg-zinc-700" : 
+              "bg-zinc-200 text-zinc-900 hover:bg-zinc-300"
+            }>
               <Plus className="h-4 w-4 mr-2" />
               New Collection
             </Button>

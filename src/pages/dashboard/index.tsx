@@ -1,17 +1,10 @@
 
 import { useState } from "react";
-import { Link } from "@/types/link";
-import { Collection } from "@/types/collection";
 import { SearchHeader } from "@/components/dashboard/search-header";
 import { DashboardTabs } from "@/components/dashboard/dashboard-tabs";
 import { CollectionDialog } from "@/components/dashboard/collection-dialog";
-import { Grid } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { PublicConfirmationDialog } from "@/components/ui/public-confirmation-dialog";
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleImportant, togglePublic, deleteLink, setSelectedLink, removeFromCollection } from '@/store/slices/linksSlice';
-import { setShowSharePopup, setShowPublicConfirmation } from '@/store/slices/uiSlice';
 import { addCollection, addLinkToCollection, removeLinkFromCollection } from '@/store/slices/collectionsSlice';
 import { BottomNavigation } from "@/components/bottom-navigation";
 import { useTheme } from "@/hooks/use-theme";
@@ -24,7 +17,7 @@ export default function Dashboard() {
   const collections = useSelector((state: any) => state.collections.collections || []);
   const [showCollectionDialog, setShowCollectionDialog] = useState(false);
   const [selectedLinkId, setSelectedLinkId] = useState<string | null>(null);
-  const { theme, isDark } = useTheme();
+  const { isDark } = useTheme();
 
   const handleAddToCollection = (linkId: string, collectionId: string) => {
     dispatch(addLinkToCollection({ collectionId, linkId }));

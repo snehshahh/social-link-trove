@@ -16,7 +16,7 @@ export function ThemeToggle({ isDarkMode, onToggle }: ThemeToggleProps) {
     >
       {isDarkMode ? 
         <Sun className="h-4 w-4 text-yellow-400" /> : 
-        <Moon className="h-4 w-4 text-white" />
+        <Moon className="h-4 w-4" />
       }
     </Toggle>
   );

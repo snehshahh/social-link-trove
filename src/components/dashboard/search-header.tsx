@@ -3,6 +3,7 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/hooks/use-theme";
+import { Sun, Moon } from "lucide-react";
 
 interface SearchHeaderProps {
   searchQuery: string;
@@ -42,7 +43,7 @@ export function SearchHeader({
             ? "border-zinc-800 text-zinc-400 hover:bg-zinc-900" 
             : "border-zinc-200 text-zinc-600 hover:bg-zinc-100"}
         >
-          {isDark ? '🌙' : '☀️'}
+          {isDark ? <Sun className="h-4 w-4 text-yellow-400" /> : <Moon className="h-4 w-4 text-zinc-600" />}
         </Button>
       </div>
     </header>
