@@ -1,13 +1,17 @@
-import { Inbox, Star, LinkIcon, Folder, Plus } from "lucide-react";
+import { Inbox, Star, LinkIcon, Folder, Plus, BookOpen, FolderPlus } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { LinkCard } from "./link-card";
-import { CollectionCard } from "./collection-card";
 import { EmptyState } from "./empty-state";
 import { Link } from "@/types/link";
+import { Collection } from "@/types/collection";
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleImportant, togglePublic, deleteLink } from '@/store/slices/linksSlice';
+import { setShowSharePopup, setShowPublicConfirmation } from '@/store/slices/uiSlice';
+import CollectionCard from "./collection-card";
 
-interface Collection {
+interface CollectionInterface {
   id: string;
   name: string;
   linkCount: number;
@@ -17,58 +21,60 @@ interface Collection {
 interface DashboardTabsProps {
   activeTab: string;
   onTabChange: (value: string) => void;
-  filteredLinks: Link[];
-  importantLinks: Link[];
-  collections: Collection[];
+  links: Link[];
+  collections: CollectionInterface[];
   searchQuery?: string;
-  onDeleteLink: (id: string) => void;
-  onToggleImportant: (id: string, important: boolean) => void;
-  onTogglePublic: (id: string, isPublic: boolean) => void;
-  onShareLink: (id: string) => void;
-  onUpdateNotes: (id: string, notes: string) => void;
-  onSaveToCollection: (id: string) => void;
 }
 
 export function DashboardTabs({
   activeTab,
   onTabChange,
-  filteredLinks,
-  importantLinks,
-  collections,
+  links = [],
+  collections = [],
   searchQuery = "",
-  onDeleteLink,
-  onToggleImportant,
-  onTogglePublic,
-  onShareLink,
-  onUpdateNotes,
-  onSaveToCollection,
 }: DashboardTabsProps) {
+
+  // Add safety check to ensure links is an array before filtering
+  const linksArray = Array.isArray(links) ? links : [];
+  console.log('DashboardTabs received links:', linksArray);
+
+  // If no links are provided, use some fallback data for development
+  if (linksArray.length === 0) {
+    console.log('No links provided, using fallback data');
+  }
+
+  const filteredLinks = linksArray.filter(link =>
+    link?.title?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const importantLinks = filteredLinks.filter(link => link.bool_imp);
+ 
   return (
     <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
       <TabsList className="bg-zinc-900/50 border border-zinc-800 w-full justify-start">
-        <TabsTrigger 
-          value="recents" 
+        <TabsTrigger
+          value="recents"
           className="data-[state=active]:bg-zinc-800 data-[state=active]:text-white"
         >
           <Inbox className="h-4 w-4 mr-2" />
           Recents
         </TabsTrigger>
-        <TabsTrigger 
-          value="important" 
+        <TabsTrigger
+          value="important"
           className="data-[state=active]:bg-zinc-800 data-[state=active]:text-white"
         >
           <Star className="h-4 w-4 mr-2" />
           Important
         </TabsTrigger>
-        <TabsTrigger 
-          value="all" 
+        <TabsTrigger
+          value="all"
           className="data-[state=active]:bg-zinc-800 data-[state=active]:text-white"
         >
           <LinkIcon className="h-4 w-4 mr-2" />
           All
         </TabsTrigger>
-        <TabsTrigger 
-          value="collections" 
+        <TabsTrigger
+          value="collections"
           className="data-[state=active]:bg-zinc-800 data-[state=active]:text-white"
         >
           <Folder className="h-4 w-4 mr-2" />
@@ -84,13 +90,7 @@ export function DashboardTabs({
                 filteredLinks.map(link => (
                   <LinkCard
                     key={link.id}
-                    {...link}
-                    onDelete={onDeleteLink}
-                    onToggleImportant={onToggleImportant}
-                    onTogglePublic={onTogglePublic}
-                    onShare={onShareLink}
-                    onUpdateNotes={onUpdateNotes}
-                    onSaveToCollection={onSaveToCollection}
+                    link={link}
                   />
                 ))
               ) : (
@@ -117,13 +117,7 @@ export function DashboardTabs({
                 importantLinks.map(link => (
                   <LinkCard
                     key={link.id}
-                    {...link}
-                    onDelete={onDeleteLink}
-                    onToggleImportant={onToggleImportant}
-                    onTogglePublic={onTogglePublic}
-                    onShare={onShareLink}
-                    onUpdateNotes={onUpdateNotes}
-                    onSaveToCollection={onSaveToCollection}
+                    link={link}
                   />
                 ))
               ) : (
@@ -145,13 +139,7 @@ export function DashboardTabs({
                 filteredLinks.map(link => (
                   <LinkCard
                     key={link.id}
-                    {...link}
-                    onDelete={onDeleteLink}
-                    onToggleImportant={onToggleImportant}
-                    onTogglePublic={onTogglePublic}
-                    onShare={onShareLink}
-                    onUpdateNotes={onUpdateNotes}
-                    onSaveToCollection={onSaveToCollection}
+                    link={link}
                   />
                 ))
               ) : (

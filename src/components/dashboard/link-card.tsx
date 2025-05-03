@@ -1,103 +1,64 @@
-import { useState } from "react";
-import { toast } from "sonner";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader } from "@/components/ui/card";
+import { useSelector, useDispatch } from 'react-redux';
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { LinkCardHeader } from "./link-card-header";
-import { LinkCardActions } from "./link-card-actions";
 import { LinkContent } from "./link-content";
+import { LinkCardActions } from "./link-card-actions";
+import { LinkCardHeader } from "./link-card-header";
+import { RootState } from '@/store';
+import { setIsEditing, setEditedNotes, setIsSaving, setShowFullDescription, setIsPreviewOpen } from '@/store/slices/linkCardSlice';
+import { Link } from '@/types/link';
 
-export interface LinkCardProps {
-  id: string;
-  url: string;
-  title: string;
-  description?: string;
-  notes?: string;
-  favicon?: string;
-  isImportant?: boolean;
-  isPublic?: boolean;
-  dateAdded: string;
-  variant?: "default" | "collection";
-  onDelete?: (id: string) => void;
-  onToggleImportant?: (id: string, important: boolean) => void;
-  onTogglePublic?: (id: string, isPublic: boolean) => void;
-  onShare?: (id: string) => void;
-  onSaveToCollection?: (id: string) => void;
-  onUpdateNotes?: (id: string, notes: string) => void;
-  onRemoveFromCollection?: (id: string) => void;
+interface LinkCardProps {
+  link: Link;
 }
 
 export function LinkCard({
-  id,
-  url,
-  title,
-  description,
-  notes,
-  favicon,
-  isImportant = false,
-  isPublic = false,
-  dateAdded,
-  variant = "default",
-  onDelete,
-  onToggleImportant,
-  onTogglePublic,
-  onShare,
-  onSaveToCollection,
-  onUpdateNotes,
-  onRemoveFromCollection,
+  link,
 }: LinkCardProps) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedNotes, setEditedNotes] = useState(notes || "");
-  const [isSaving, setIsSaving] = useState(false);
-  const [showFullDescription, setShowFullDescription] = useState(false);
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const dispatch = useDispatch();
+  const { isEditing, editedNotes, showFullDescription, isPreviewOpen } = useSelector((state: RootState) => state.linkCard);
 
-  const domain = url ? new URL(url).hostname.replace("www.", "") : "";
-  const formattedDate = new Date(dateAdded).toLocaleDateString("en-US", {
+  const handleTogglePreview = () => {
+    dispatch(setIsPreviewOpen(!isPreviewOpen));
+  };
+
+  const handleShowMoreDescription = () => {
+    dispatch(setShowFullDescription(!showFullDescription));
+  };
+
+  const handleEditNotesChange = (value: string) => {
+    dispatch(setEditedNotes(value));
+  };
+
+  const formattedDate = new Date(link.created_at).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
   });
 
-  const handleSaveNotes = async () => {
-    setIsSaving(true);
-    try {
-      await new Promise(resolve => setTimeout(resolve, 600));
-      onUpdateNotes?.(id, editedNotes);
-      setIsEditing(false);
-      toast.success("Notes updated successfully");
-    } catch (error) {
-      toast.error("Failed to update notes");
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
   return (
     <Card className={cn(
       "overflow-hidden transition-all duration-300 group hover:shadow-md bg-black border border-white/10 hover:border-white/20", 
-      isImportant && "border-l-4 border-l-yellow-400",
+      link.bool_imp && "border-l-4 border-l-yellow-400",
       "animate-fade-in"
     )}>
       <CardHeader className="relative pb-3">
         <LinkCardHeader
-          domain={domain}
-          favicon={favicon}
-          isImportant={isImportant}
-          isPublic={isPublic}
+          id={link.id}
+          domain={new URL(link.url).hostname}
+          bool_imp={link.bool_imp}
+          isPublic={link.isPublic}
           isPreviewOpen={isPreviewOpen}
-          onTogglePublic={() => onTogglePublic?.(id, !isPublic)}
-          onTogglePreview={() => setIsPreviewOpen(!isPreviewOpen)}
+          favicon={`https://www.google.com/s2/favicons?domain=${link.url}`}
+          onTogglePreview={handleTogglePreview}
         />
         <LinkContent
-          url={url}
-          title={title}
-          description={description}
-          notes={notes}
+          link={link}
           isEditing={isEditing}
           editedNotes={editedNotes}
           showFullDescription={showFullDescription}
-          onShowMoreDescription={() => setShowFullDescription(true)}
-          onEditNotesChange={(value) => setEditedNotes(value)}
+          onShowMoreDescription={handleShowMoreDescription}
+          onEditNotesChange={handleEditNotesChange}
         />
       </CardHeader>
       
@@ -105,8 +66,8 @@ export function LinkCard({
         <div className="px-6 pb-4 -mt-2">
           <div className="w-full overflow-hidden rounded-lg border border-white/10">
             <iframe 
-              src={url} 
-              title={title}
+              src={link.url} 
+              title={link.title}
               className="w-full h-[300px]"
               sandbox="allow-scripts allow-same-origin"
             />
@@ -122,25 +83,15 @@ export function LinkCard({
         "flex flex-wrap items-center justify-between border-t border-white/10 pt-4 gap-2",
       )}>
         <div className="text-xs text-white/50">
-          Added on {formattedDate}
+          Added on {link.created_at}
         </div>
         <div className="flex flex-wrap gap-2">
           <LinkCardActions
-            id={id}
-            isEditing={isEditing}
-            isPublic={isPublic}
-            isImportant={isImportant}
-            variant={variant}
-            isSaving={isSaving}
-            onTogglePublic={(id, isPublic) => onTogglePublic?.(id, isPublic)}
-            onToggleImportant={(id, important) => onToggleImportant?.(id, important)}
-            onShare={(id) => onShare?.(id)}
-            onDelete={(id) => onDelete?.(id)}
-            onSaveToCollection={(id) => onSaveToCollection?.(id)}
-            onRemoveFromCollection={(id) => onRemoveFromCollection?.(id)}
-            onEdit={() => setIsEditing(true)}
-            onCancelEdit={() => setIsEditing(false)}
-            onSave={handleSaveNotes}
+            id={link.id}
+            bool_imp={link.bool_imp}
+            isPublic={link.isPublic}
+            title={link.title || ""}
+            onEdit={() => dispatch(setIsEditing(true))}
           />
         </div>
       </CardFooter>
