@@ -6,22 +6,21 @@ import { Button } from "@/components/ui/button";
 import { LinkCard } from "./link-card";
 import { EmptyState } from "./empty-state";
 import { Link } from "@/types/link";
-import CollectionCard from "./collection-card";
+import { Collection } from "@/types/collection";
 import { useTheme } from "@/hooks/use-theme";
 import { useState, useEffect } from "react";
-
-interface CollectionInterface {
-  id: string;
-  name: string;
-  linkCount: number;
-  dateCreated: string;
-}
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/store";
+import { toast } from "sonner";
+import { CollectionCard } from "./collection-card";
+import { CollectionSharePopup } from "./collection-share-popup";
+import { updateCollection } from "@/store/slices/collectionsSlice";
 
 interface DashboardTabsProps {
   activeTab: string;
   onTabChange: (value: string) => void;
   links: Link[];
-  collections: CollectionInterface[];
+  collections: any[];
   searchQuery?: string;
 }
 
@@ -34,6 +33,9 @@ export function DashboardTabs({
 }: DashboardTabsProps) {
   const { isDark } = useTheme();
   const [hoveredTab, setHoveredTab] = useState<string | null>(null);
+  const [showSharePopup, setShowSharePopup] = useState(false);
+  const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
+  const dispatch = useDispatch();
 
   // Add safety check to ensure links is an array before filtering
   const linksArray = Array.isArray(links) ? links : [];
@@ -49,6 +51,35 @@ export function DashboardTabs({
   );
 
   const importantLinks = filteredLinks.filter(link => link.bool_imp);
+  
+  // Filter collections based on search query
+  const filteredCollections = Array.isArray(collections) 
+    ? collections.filter(collection => 
+        collection?.name?.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : [];
+
+  // Handle collection public toggle
+  const handleTogglePublic = (isPublic: boolean) => {
+    if (!selectedCollection) return;
+    
+    dispatch(updateCollection({
+      ...selectedCollection,
+      isPublic
+    }));
+    
+    toast.success(`Collection is now ${isPublic ? 'public' : 'private'}`);
+  };
+  
+  // Handle share with friends
+  const handleShareWithFriends = (friendIds: string[]) => {
+    if (!selectedCollection) return;
+    
+    dispatch(updateCollection({
+      ...selectedCollection,
+      shared_with: friendIds
+    }));
+  };
 
   // Tab configuration with all necessary data
   const tabConfig = [
@@ -91,138 +122,174 @@ export function DashboardTabs({
   ];
 
   return (
-    <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
-      <div className={`p-1 ${isDark ? 'bg-zinc-900/20' : 'bg-white/80'} backdrop-blur-md rounded-xl border ${isDark ? 'border-zinc-800/50' : 'border-zinc-200/70'} mb-6`}>
-        <TabsList className="w-full h-auto p-1 bg-transparent flex items-center gap-1">
-          {tabConfig.map((tab) => (
-            <TabsTrigger
-              key={tab.id}
-              value={tab.id}
-              className={`relative flex-1 py-3 px-6 rounded-lg transition-all duration-300 ${
-                activeTab === tab.id 
-                  ? isDark
-                    ? 'bg-gradient-to-br from-zinc-800 to-zinc-900 text-white shadow-lg shadow-black/20'
-                    : 'bg-gradient-to-br from-white to-zinc-50 text-zinc-900 shadow-md shadow-zinc-300/30'
-                  : isDark
-                    ? 'text-zinc-400 hover:text-zinc-300'
-                    : 'text-zinc-600 hover:text-zinc-800'
-              } ${
-                hoveredTab === tab.id && activeTab !== tab.id
-                  ? isDark
-                    ? 'bg-zinc-800/30'
-                    : 'bg-zinc-100/80'
-                  : ''
-              } data-[state=active]:scale-100 data-[state=active]:translate-y-0 data-[state=inactive]:translate-y-0`}
-              onMouseEnter={() => setHoveredTab(tab.id)}
-              onMouseLeave={() => setHoveredTab(null)}
-            >
-              <div className="flex items-center justify-center gap-2">
-                <tab.icon className={`h-4 w-4 ${
+    <>
+      <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
+        <div className={`p-1 ${isDark ? 'bg-zinc-900/20' : 'bg-white/80'} backdrop-blur-md rounded-xl border ${isDark ? 'border-zinc-800/50' : 'border-zinc-200/70'} mb-6`}>
+          <TabsList className="w-full h-auto p-1 bg-transparent flex items-center gap-1">
+            {tabConfig.map((tab) => (
+              <TabsTrigger
+                key={tab.id}
+                value={tab.id}
+                className={`relative flex-1 py-3 px-6 rounded-lg transition-all duration-300 ${
                   activeTab === tab.id 
                     ? isDark
-                      ? 'text-yellow-400'
-                      : 'text-blue-500'
+                      ? 'bg-gradient-to-br from-zinc-800 to-zinc-900 text-white shadow-lg shadow-black/20'
+                      : 'bg-gradient-to-br from-white to-zinc-50 text-zinc-900 shadow-md shadow-zinc-300/30'
+                    : isDark
+                      ? 'text-zinc-400 hover:text-zinc-300'
+                      : 'text-zinc-600 hover:text-zinc-800'
+                } ${
+                  hoveredTab === tab.id && activeTab !== tab.id
+                    ? isDark
+                      ? 'bg-zinc-800/30'
+                      : 'bg-zinc-100/80'
                     : ''
-                }`} />
-                <span className="font-medium">{tab.label}</span>
-              </div>
-              
-              {/* Animated highlight for active tab */}
-              {activeTab === tab.id && (
-                <div className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-12 h-1 rounded-full ${
-                  isDark ? 'bg-yellow-400/70' : 'bg-blue-500/70'
-                }`}></div>
-              )}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-      </div>
+                } data-[state=active]:scale-100 data-[state=active]:translate-y-0 data-[state=inactive]:translate-y-0`}
+                onMouseEnter={() => setHoveredTab(tab.id)}
+                onMouseLeave={() => setHoveredTab(null)}
+              >
+                <div className="flex items-center justify-center gap-2">
+                  <tab.icon className={`h-4 w-4 ${
+                    activeTab === tab.id 
+                      ? isDark
+                        ? 'text-yellow-400'
+                        : 'text-blue-500'
+                      : ''
+                  }`} />
+                  <span className="font-medium">{tab.label}</span>
+                </div>
+                
+                {/* Animated highlight for active tab */}
+                {activeTab === tab.id && (
+                  <div className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-12 h-1 rounded-full ${
+                    isDark ? 'bg-yellow-400/70' : 'bg-blue-500/70'
+                  }`}></div>
+                )}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </div>
 
-      <div className="mt-6">
-        {tabConfig.filter(tab => !tab.isSpecial).map((tab) => (
-          <TabsContent key={tab.id} value={tab.id} className="space-y-6">
-            <ScrollArea className="h-[calc(100vh-12rem)]">
-              <div className="space-y-4">
-                {tab.content && tab.content.length > 0 ? (
-                  tab.content.map(link => (
-                    <LinkCard
-                      key={link.id}
-                      link={link}
+        <div className="mt-6">
+          {tabConfig.filter(tab => !tab.isSpecial).map((tab) => (
+            <TabsContent key={tab.id} value={tab.id} className="space-y-6">
+              <ScrollArea className="h-[calc(100vh-12rem)]">
+                <div className="space-y-4">
+                  {tab.content && tab.content.length > 0 ? (
+                    tab.content.map(link => (
+                      <LinkCard
+                        key={link.id}
+                        link={link}
+                      />
+                    ))
+                  ) : (
+                    <EmptyState
+                      icon={tab.emptyIcon}
+                      title={tab.emptyTitle}
+                      description={tab.emptyDescription}
+                      action={tab.showAddButton ? (
+                        <Button className={isDark ? 
+                          "bg-zinc-800 text-zinc-200 hover:bg-zinc-700" : 
+                          "bg-zinc-200 text-zinc-900 hover:bg-zinc-300"
+                        }>
+                          <LinkIcon className="h-4 w-4 mr-2" />
+                          Add Link
+                        </Button>
+                      ) : undefined}
+                      className={isDark ? "bg-zinc-900/50 border border-zinc-800" : "bg-white/50 border border-zinc-200"}
                     />
-                  ))
-                ) : (
-                  <EmptyState
-                    icon={tab.emptyIcon}
-                    title={tab.emptyTitle}
-                    description={tab.emptyDescription}
-                    action={tab.showAddButton ? (
-                      <Button className={isDark ? 
-                        "bg-zinc-800 text-zinc-200 hover:bg-zinc-700" : 
-                        "bg-zinc-200 text-zinc-900 hover:bg-zinc-300"
-                      }>
-                        <LinkIcon className="h-4 w-4 mr-2" />
-                        Add Link
-                      </Button>
-                    ) : undefined}
-                    className={isDark ? "bg-zinc-900/50 border border-zinc-800" : "bg-white/50 border border-zinc-200"}
+                  )}
+                </div>
+              </ScrollArea>
+            </TabsContent>
+          ))}
+
+          <TabsContent value="collections">
+            <div className="mb-6">
+              <div className={`flex justify-between items-center ${isDark ? 'bg-zinc-900/30' : 'bg-white/30'} backdrop-blur-sm p-4 rounded-lg border ${isDark ? 'border-zinc-800' : 'border-zinc-200'}`}>
+                <div className="flex items-center">
+                  <Folder className={`h-5 w-5 mr-2 ${isDark ? 'text-yellow-400' : 'text-blue-500'}`} />
+                  <h2 className={`text-lg font-medium ${isDark ? 'text-zinc-200' : 'text-zinc-800'}`}>
+                    Your Collections
+                  </h2>
+                  <span className={`ml-2 px-2 py-0.5 text-xs font-semibold rounded-full ${
+                    isDark ? 'bg-zinc-800 text-zinc-400' : 'bg-zinc-100 text-zinc-600'
+                  }`}>
+                    {filteredCollections.length}
+                  </span>
+                </div>
+                <Button className={`rounded-full px-4 ${isDark ? 
+                  "bg-gradient-to-br from-zinc-800 to-zinc-900 text-zinc-200 hover:from-zinc-700 hover:to-zinc-800 border border-zinc-700" : 
+                  "bg-gradient-to-br from-white to-zinc-50 text-zinc-900 hover:from-zinc-50 hover:to-zinc-100 border border-zinc-200"
+                }`}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  New Collection
+                </Button>
+              </div>
+            </div>
+            
+            <ScrollArea className="h-[calc(100vh-12rem)]">
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 pb-8">
+                {filteredCollections.map(collection => (
+                  <CollectionCard
+                    key={collection.id}
+                    id={collection.id}
+                    name={collection.name}
+                    description={collection.description}
+                    linkCount={collection.links?.length || 0}
+                    dateCreated={collection.createdAt || collection.created_at}
+                    isPublic={collection.isPublic}
+                    onEdit={() => {
+                      toast.success(`Editing collection: ${collection.name}`);
+                    }}
+                    onDelete={() => {
+                      toast.success(`Deleted collection: ${collection.name}`);
+                    }}
+                    onShare={() => {
+                      setSelectedCollection(collection);
+                      setShowSharePopup(true);
+                    }}
+                    onClick={() => {
+                      toast.success(`Viewing collection: ${collection.name}`);
+                    }}
                   />
+                ))}
+                {filteredCollections.length === 0 && (
+                  <div className={`col-span-full flex flex-col items-center justify-center p-12 rounded-lg ${
+                    isDark ? 'bg-zinc-900/50 border border-zinc-800' : 'bg-white/50 border border-zinc-200'
+                  }`}>
+                    <Folder className={`h-12 w-12 ${isDark ? 'text-zinc-700' : 'text-zinc-300'} mb-4`} />
+                    <h3 className={`text-xl font-medium ${isDark ? 'text-zinc-300' : 'text-zinc-700'} mb-2`}>No collections yet</h3>
+                    <p className={`text-center mb-6 ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
+                      Create your first collection to organize your links
+                    </p>
+                    <Button className={`${isDark ? 
+                      "bg-zinc-800 text-zinc-200 hover:bg-zinc-700" : 
+                      "bg-zinc-200 text-zinc-900 hover:bg-zinc-300"
+                    }`}>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Create Collection
+                    </Button>
+                  </div>
                 )}
               </div>
             </ScrollArea>
           </TabsContent>
-        ))}
-
-        <TabsContent value="collections">
-          <div className="mb-6">
-            <div className={`flex justify-between items-center ${isDark ? 'bg-zinc-900/30' : 'bg-white/30'} backdrop-blur-sm p-4 rounded-lg border ${isDark ? 'border-zinc-800' : 'border-zinc-200'}`}>
-              <div className="flex items-center">
-                <Folder className={`h-5 w-5 mr-2 ${isDark ? 'text-yellow-400' : 'text-blue-500'}`} />
-                <h2 className={`text-lg font-medium ${isDark ? 'text-zinc-200' : 'text-zinc-800'}`}>
-                  Your Collections
-                </h2>
-                <span className={`ml-2 px-2 py-0.5 text-xs font-semibold rounded-full ${
-                  isDark ? 'bg-zinc-800 text-zinc-400' : 'bg-zinc-100 text-zinc-600'
-                }`}>
-                  {collections.length}
-                </span>
-              </div>
-              <Button className={`rounded-full px-4 ${isDark ? 
-                "bg-gradient-to-br from-zinc-800 to-zinc-900 text-zinc-200 hover:from-zinc-700 hover:to-zinc-800 border border-zinc-700" : 
-                "bg-gradient-to-br from-white to-zinc-50 text-zinc-900 hover:from-zinc-50 hover:to-zinc-100 border border-zinc-200"
-              }`}>
-                <Plus className="h-4 w-4 mr-2" />
-                New Collection
-              </Button>
-            </div>
-          </div>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {collections.map(collection => (
-              <CollectionCard
-                key={collection.id}
-                {...collection}
-              />
-            ))}
-            {collections.length === 0 && (
-              <div className={`col-span-full flex flex-col items-center justify-center p-12 rounded-lg ${
-                isDark ? 'bg-zinc-900/50 border border-zinc-800' : 'bg-white/50 border border-zinc-200'
-              }`}>
-                <Folder className={`h-12 w-12 ${isDark ? 'text-zinc-700' : 'text-zinc-300'} mb-4`} />
-                <h3 className={`text-xl font-medium ${isDark ? 'text-zinc-300' : 'text-zinc-700'} mb-2`}>No collections yet</h3>
-                <p className={`text-center mb-6 ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>
-                  Create your first collection to organize your links
-                </p>
-                <Button className={`${isDark ? 
-                  "bg-zinc-800 text-zinc-200 hover:bg-zinc-700" : 
-                  "bg-zinc-200 text-zinc-900 hover:bg-zinc-300"
-                }`}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Create Collection
-                </Button>
-              </div>
-            )}
-          </div>
-        </TabsContent>
-      </div>
-    </Tabs>
+        </div>
+      </Tabs>
+      
+      {/* Share Popup */}
+      {selectedCollection && (
+        <CollectionSharePopup
+          isOpen={showSharePopup}
+          onClose={() => setShowSharePopup(false)}
+          collectionId={selectedCollection.id}
+          collectionName={selectedCollection.name}
+          isPublic={!!selectedCollection.isPublic}
+          onTogglePublic={handleTogglePublic}
+          onShareWithFriends={handleShareWithFriends}
+        />
+      )}
+    </>
   );
 }

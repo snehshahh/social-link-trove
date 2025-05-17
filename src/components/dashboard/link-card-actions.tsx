@@ -61,7 +61,7 @@ export function LinkCardActions({
   };
 
   const buttonClassName = cn(
-    "border",
+    "border transition-colors",
     isDark 
       ? "border-white/10 text-white/90 hover:bg-white/5 hover:text-white" 
       : "border-zinc-200 text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900"
@@ -126,7 +126,10 @@ export function LinkCardActions({
           className={buttonClassName}
           onClick={handleToggleImportant}
         >
-          <Star className="h-4 w-4 mr-1" />
+          <Star className={cn(
+            "h-4 w-4 mr-1",
+            bool_imp && (isDark ? "text-yellow-400" : "text-blue-500")
+          )} />
           {bool_imp ? "Remove" : "Mark"} Important
         </Button>
         <Button
