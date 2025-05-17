@@ -64,6 +64,16 @@ export default function CollectionCard({
     toast.success("Collection link copied to clipboard");
   };
 
+  const handleCopyLink = (e) => {
+    e.stopPropagation();
+    // Get the hosting URL from env or fallback to current origin
+    const hostingUrl = process.env.HOSTING_URL || window.location.origin;
+    const shareUrl = `${hostingUrl}/shared-collection/${id}`;
+    
+    navigator.clipboard.writeText(shareUrl);
+    toast.success("Collection link copied to clipboard");
+  };
+
   const handleDelete = () => {
     if (showConfirmDelete) {
       onDelete?.(id);
@@ -310,6 +320,20 @@ export default function CollectionCard({
                 }}
               >
                 <Edit2 className="h-4 w-4" />
+              </button>
+              
+              <button 
+                className={`p-2 rounded-full ${
+                  isDark
+                    ? "text-white/70 hover:text-yellow-400 hover:bg-white/5"
+                    : "text-zinc-500 hover:text-blue-500 hover:bg-zinc-100"
+                } transition-colors`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleCopyLink(e);
+                }}
+              >
+                <Copy className="h-4 w-4" />
               </button>
               
               <button 

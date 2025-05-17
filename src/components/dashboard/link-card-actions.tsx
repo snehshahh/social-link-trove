@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Share, Star, Trash2, Edit, BookmarkPlus, Bookmark, X } from "lucide-react";
+import { Share, Star, Trash2, Edit, BookmarkPlus, Bookmark, X, Copy } from "lucide-react";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from "@/store";
 import { toggleImportant, togglePublic, deleteLink } from "@/store/slices/linksSlice";
@@ -46,6 +46,15 @@ export function LinkCardActions({
     dispatch(setShowSharePopup(true));
   };
 
+  const handleCopyLink = () => {
+    // Get the hosting URL from env or fallback to current origin
+    const hostingUrl = process.env.HOSTING_URL || window.location.origin;
+    const shareUrl = `${hostingUrl}/sharedLink/${id}`;
+    
+    navigator.clipboard.writeText(shareUrl);
+    toast.success("Link copied to clipboard");
+  };
+
   const handleDelete = () => {
     dispatch(deleteLink(id));
     toast.success("Link removed");
@@ -70,6 +79,15 @@ export function LinkCardActions({
         >
           <Share className="h-4 w-4 mr-1" />
           Share
+        </Button>
+        <Button
+          size="sm"
+          variant="outline"
+          className={buttonClassName}
+          onClick={handleCopyLink}
+        >
+          <Copy className="h-4 w-4 mr-1" />
+          Copy Link
         </Button>
         <Button
           size="sm"
@@ -110,6 +128,15 @@ export function LinkCardActions({
         >
           <Star className="h-4 w-4 mr-1" />
           {bool_imp ? "Remove" : "Mark"} Important
+        </Button>
+        <Button
+          size="sm"
+          variant="outline"
+          className={buttonClassName}
+          onClick={handleCopyLink}
+        >
+          <Copy className="h-4 w-4 mr-1" />
+          Copy Link
         </Button>
         <Button
           size="sm"
